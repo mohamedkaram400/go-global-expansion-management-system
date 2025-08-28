@@ -32,10 +32,7 @@ func main() {
 
   defer mongo.Disconnect(context.Background())
 
-  // migrate (if needed)
-	// conn.AutoMigrate(&entities.Client{})
-
-  // Service
+  // Service, Repo and Handlers
 	// 2. Init Repo
 	authRepo := repositories.NewAuthRepo(mysql)
 
@@ -45,45 +42,35 @@ func main() {
 	// 4. Init Handler
 	authHandler := http.NewAuthHandler(authService)
 
+
+  // Routes
 	router := gin.Default()
-  router.SetTrustedProxies(nil)
-  router.Use(gin.Logger(), gin.Recovery())
+	router.SetTrustedProxies(nil)
+	router.Use(gin.Logger(), gin.Recovery())
 
+	// Register routes
+	TestServer(router)
+	// RegisterRoutes(router)
 
-  // Just a test route
-  router.GET("/ping", func(c *gin.Context) {
-    c.JSON(200, gin.H{"message": "pong"})
-  })
-
-  // Register routes
-  router.POST("/register", authHandler.Register)
-	router.POST("/login", authHandler.Login)
-
-  router.Run(config.Port)
-  if err := router.Run(config.Port); err != nil {
-		log.Fatal("❌ Failed to start server:", err)
-	}
-  log.Println("🚀 App started on port", config.Port)
-
-  // 4. Start server
-  // startServer(mysql, config)
+	// Start server
+	startServer(router, config)
 }
 
-// func startServer(mysql *gorm.DB, config *config.Config) {
-  //   // Init routes
-  //   router := gin.Default()
-  //   router.SetTrustedProxies(nil)
-  //   router.Use(gin.Logger(), gin.Recovery())
+func TestServer(router *gin.Engine) {
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
+}
 
-  //   // Just a test route
-  //   router.GET("/ping", func(c *gin.Context) {
-  //     c.JSON(200, gin.H{"message": "pong"})
-  //   })
-
-  //   // Register routes
-  //   router.POST("/register", authHandler.Register)
-  // 	router.POST("/login", authHandler.Login)
-
-  //   router.Run(config.Port)
-  //   log.Println("🚀 App started on port", config.Port)
+// func RegisterRoutes(router *gin.Engine) {
+// 	authHandler := NewAuthHandler()
+// 	router.POST("/register", authHandler.Register)
+// 	router.POST("/login", authHandler.Login)
 // }
+
+func startServer(router *gin.Engine, config *config.Config) {
+	if err := router.Run(config.Port); err != nil {
+		log.Fatal("❌ Failed to start server:", err)
+	}
+	log.Println("🚀 App started on port", config.Port)
+}
