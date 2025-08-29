@@ -3,12 +3,15 @@ package services
 import (
 	"context"
 	"errors"
+	"strconv"
+	"time"
 
+	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
 )
 
 type AuthService struct {
@@ -30,7 +33,7 @@ func (svc *AuthService) Register(ctx context.Context, req *requests.RegisterRequ
 	hashedPwd, err := pkg.HashPassword(req.Password)
 	if err != nil {
 		return nil, err
-	}
+	} 
 
 	// Create client model
 	client := &entities.Client{
@@ -43,40 +46,38 @@ func (svc *AuthService) Register(ctx context.Context, req *requests.RegisterRequ
 	return svc.repo.Register(ctx, client)
 }
 
-func (svc *AuthService) Login(ctx context.Context, req *requests.LoginRequest) (string, string, error) {
+func (svc *AuthService) Login(ctx context.Context, req *requests.LoginRequest) (*entities.Client, string, string, error) {
 	// Get company name exists
 	client, err := svc.repo.GetClientByCompanyName(ctx, req.CompanyName)
 	if err != nil || client == nil {
-		return "", "", errors.New("company not found")
+		return nil, "", "", errors.New("company not found")
 	}
 
-
 	if err := pkg.CheckPassword(client.Password, req.Password); err != nil {
-		return "", "", errors.New("invalid password")
+		return nil, "", "", errors.New("invalid password")
 	}
 
 	// Access token (short-lived, 15 min)
-	accessToken, err := auth.GenerateAccessToken(client.CompanyName, 1) // 1 hour for now
+	accessToken, err := auth.GenerateAccessToken(client.ID, client.CompanyName, 1) // 1 hour for now
 	if err != nil {
-		return "", "", errors.New("could not generate access token")
+		return nil, "", "", errors.New("could not generate access token")
 	}
 
 	// Refresh token (long-lived, 7 days)
-	refreshToken, err := auth.GenerateRefreshToken(client.CompanyName, 7)
+	refreshToken, err := auth.GenerateRefreshToken(client.ID, client.CompanyName, 7) // 7 days for now
 	if err != nil {
-		return "", "", errors.New("could not generate refresh token")
+		return nil, "", "", errors.New("could not generate refresh token")
 	}
 
 	// Store refresh token in Redis or DB
-	// err = redisclient.Client.Set(ctx, emp.ID, refreshToken, 7*24*time.Hour).Err()
-	// if err != nil {
-	// 	return "", "", errors.New("failed to store refresh token")
-	// }
+	err = conn.RedisClient.Set(ctx, strconv.Itoa(int(client.ID)), refreshToken, 7*24*time.Hour).Err()
+	if err != nil {
+		return nil, "", "", errors.New("failed to store refresh token")
+	}
 
-	return accessToken, refreshToken, nil
+	return client, accessToken, refreshToken, nil
 }
 
-
-func (s *AuthService) Logout(clientID string) (string, error) {
-	return s.repo.Logout(clientID)
+func (svc *AuthService) Logout(clientID uint) error {
+	return conn.RedisClient.Del(context.Background(), strconv.FormatUint(uint64(clientID), 10)).Err()
 }

@@ -1,12 +1,14 @@
 package auth
 
 import (
-	"time"
 	"errors"
+	"os"
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("YOUR_SECRET_KEY") // load from env
+var jwtSecret = []byte(os.Getenv("YOUR_SECRET_KEY"))
 
 type TokenType string
 
@@ -15,27 +17,28 @@ const (
 	RefreshToken TokenType = "refresh"
 )
 
-func GenerateToken(CompanyName string, duration time.Duration, tokenType TokenType) (string, error) {
+func GenerateToken(clientID uint, CompanyName string, duration time.Duration, tokenType TokenType) (string, error) {
 
 	claims := jwt.MapClaims{
-		"company_name": CompanyName,
-		"exp":         time.Now().Add(duration).Unix(),
-		"type":        tokenType,
+		"client_id"		: clientID,
+		"company_name"	: CompanyName,
+		"exp"			: time.Now().Add(duration).Unix(),
+		"type"			: tokenType,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
 }
 
-func GenerateAccessToken(CompanyName string, hours int) (string, error) {
-	return GenerateToken(CompanyName, time.Duration(hours)*time.Hour, AccessToken)
+func GenerateAccessToken(clientID uint, CompanyName string, hours int) (string, error) {
+	return GenerateToken(clientID, CompanyName, time.Duration(hours)*time.Hour, AccessToken)
 }
 
-func GenerateRefreshToken(CompanyName string, days int) (string, error) {
-	return GenerateToken(CompanyName, time.Duration(days)*24*time.Hour, RefreshToken)
+func GenerateRefreshToken(clientID uint, CompanyName string, days int) (string, error) {
+	return GenerateToken(clientID, CompanyName, time.Duration(days)*24*time.Hour, RefreshToken)
 }
 
-func ValidateJWT(tokenString string) (string, error) {
+func ValidateJWT(tokenString string) (uint, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -44,18 +47,18 @@ func ValidateJWT(tokenString string) (string, error) {
 	})
 
 	if err != nil || !token.Valid {
-		return "", errors.New("invalid token")
+		return 0, errors.New("invalid token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return "", errors.New("invalid claims")
+		return 0, errors.New("invalid claims")
 	}
-
-	CompanyName, ok := claims["client_id"].(string)
+	
+	clientIDFloat, ok := claims["client_id"].(float64)
 	if !ok {
-		return "", errors.New("client_id not found in token")
+		return 0, errors.New("client id not found in token")
 	}
-
-	return CompanyName, nil
+	
+	return uint(clientIDFloat), nil
 }

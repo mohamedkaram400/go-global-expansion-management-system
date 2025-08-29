@@ -19,18 +19,9 @@ func NewAuthRepo(db *gorm.DB) *AuthRepo {
 func (r *AuthRepo) Register(ctx context.Context, client *entities.Client) (*entities.Client, error) {
 	if err := r.DB.WithContext(ctx).Create(client).Error; err != nil {
 		return nil, err
-	}
+	} 
 	return client, nil
 }
-
-// Login: fetch client by email
-// func (r *AuthRepo) Login(ctx context.Context, email string, password string) (*entities.Client, error) {
-// 	var client entities.Client
-// 	if err := r.DB.WithContext(ctx).Where("contact_email = ?", email).First(&client).Error; err != nil {
-// 		return nil, err
-// 	}
-// 	return &client, nil
-// }
 
 func (r *AuthRepo) GetClientByCompanyName(ctx context.Context, companyName string) (*entities.Client, error) {
 	var client entities.Client
