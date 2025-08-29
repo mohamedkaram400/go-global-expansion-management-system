@@ -7,14 +7,11 @@ import (
 )
 
 func RegisterAuthRoutes(rg *gin.RouterGroup, authHandler *http.AuthHandler) {
-    auth := rg.Group("/auth")
-    v2 := auth.Group("/v2")
+	auth := rg.Group("/auth")
 
-	v2.Use(middlewares.JWTAuth()) 
-
-    {
-        auth.POST("/register", authHandler.Register)
-        auth.POST("/login", authHandler.Login)
-        v2.POST("/logout", authHandler.Logout)
-    }
+	{
+		auth.POST("/register", authHandler.Register)
+		auth.POST("/login", authHandler.Login)
+        auth.POST("/logout", middlewares.JWTAuth(), authHandler.Logout)
+	}
 }
