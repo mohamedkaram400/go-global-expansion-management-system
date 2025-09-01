@@ -38,9 +38,15 @@ func main() {
 	defer mongo.Disconnect(context.Background())
 
 	// 5. Service, Repo and Handlers
+	// Auth Module
 	authRepo := repositories.NewAuthRepo(mysql)
 	authService := services.NewAuthService(authRepo)
 	authHandler := http.NewAuthHandler(authService)
+
+	// Client Module
+	clientRepo := repositories.NewClientRepo(mysql)
+	clientService := services.NewClientService(clientRepo)
+	clientHandler := http.NewClientHandler(clientService)
 
 	// 6. Init router
 	router := gin.Default()
@@ -52,6 +58,7 @@ func main() {
 
 	// 8. Register routes by module
 	routes.RegisterAuthRoutes(v1, authHandler)
+	routes.RegisterClientRoutes(v1, clientHandler)
 
 	// 9. Test server
 	TestServer(router)
