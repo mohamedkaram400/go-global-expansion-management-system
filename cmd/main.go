@@ -48,6 +48,11 @@ func main() {
 	clientService := services.NewClientService(clientRepo)
 	clientHandler := http.NewClientHandler(clientService)
 
+	// Vendor Module
+	vendorRepo := repositories.NewVendorRepo(mysql)
+	vendorService := services.NewVendorService(vendorRepo)
+	vendorHandler := http.NewVendorHandler(vendorService)
+
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
@@ -57,8 +62,9 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	// 8. Register routes by module
-	routes.RegisterAuthRoutes(v1, authHandler)
+	routes.RegisterAuthRoutes(v1,   authHandler)
 	routes.RegisterClientRoutes(v1, clientHandler)
+	routes.RegisterVendorRoutes(v1, vendorHandler)
 
 	// 9. Test server
 	TestServer(router)
