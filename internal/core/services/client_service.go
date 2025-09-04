@@ -6,6 +6,7 @@ import (
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
 )
 
@@ -27,9 +28,15 @@ func (svc *ClientService) FindClientByID(ctx context.Context, clientID string) (
 }
 
 func (svc *ClientService) InsertClient(ctx context.Context, req *requests.ClientRequest) (*entities.Client, error) {
+	hashedPassword, err := pkg.HashPassword(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	client := &entities.Client{
 		CompanyName:  req.CompanyName,
 		ContactEmail: req.ContactEmail,
+		Password: 	  hashedPassword,
 	}
 
 	existing, _ := svc.Repo.GetByEmail(ctx, client.ContactEmail)
