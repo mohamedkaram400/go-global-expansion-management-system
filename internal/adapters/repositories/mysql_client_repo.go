@@ -40,6 +40,19 @@ func (r *ClientRepo) FindClientByID(ctx context.Context, clientID string) (*enti
 	return &client, nil
 }
 
+func (r *ClientRepo) GetByEmail(ctx context.Context, ContactEmail string) (*entities.Client, error) {
+	var client entities.Client
+	if err := r.DB.WithContext(ctx).
+		Where("contact_email = ?", ContactEmail).
+		First(&client).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		return nil, err
+	}
+	return &client, nil
+}
+
 func (r *ClientRepo) InsertClient(ctx context.Context, client *entities.Client) (*entities.Client, error) {
 	if err := r.DB.WithContext(ctx).Create(client).Error; err != nil {
 		return nil, err

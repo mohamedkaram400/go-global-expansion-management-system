@@ -31,6 +31,12 @@ func (svc *ClientService) InsertClient(ctx context.Context, req *requests.Client
 		CompanyName:  req.CompanyName,
 		ContactEmail: req.ContactEmail,
 	}
+
+	existing, _ := svc.Repo.GetByEmail(ctx, client.ContactEmail)
+    if existing != nil && existing.ID != client.ID {
+        return nil, errors.New("email already in use")
+    }
+
 	return svc.Repo.InsertClient(ctx, client)
 }
 
@@ -48,6 +54,11 @@ func (svc *ClientService) UpdateClientByID(ctx context.Context, clientID string,
 	if len(updates) == 0 {
 		return nil, errors.New("no fields to update")
 	}
+
+	existing, _ := svc.Repo.GetByEmail(ctx, newClient.ContactEmail)
+    if existing != nil && existing.ID != newClient.ID {
+        return nil, errors.New("email already in use")
+    }
 
 	return svc.Repo.UpdateClientByID(ctx, clientID, updates)
 }

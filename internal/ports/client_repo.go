@@ -12,4 +12,5 @@ type ClientRepository interface {
     GetAllClients(ctx context.Context, skip int, limit int) ([]entities.Client, error)
     UpdateClientByID(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error)
     DeleteClientByID(ctx context.Context, clientID string) (int, error)
+    GetByEmail(ctx context.Context, ContactEmail string) (*entities.Client, error)
 }
