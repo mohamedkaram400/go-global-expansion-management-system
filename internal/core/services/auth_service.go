@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"os"
 	"strconv"
 	"time"
 
@@ -47,6 +48,16 @@ func (svc *AuthService) Register(ctx context.Context, req *requests.RegisterRequ
 }
 
 func (svc *AuthService) Login(ctx context.Context, req *requests.LoginRequest) (*entities.Client, string, string, error) {
+	accessHours, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
+	if err != nil {
+		return nil, "", "", errors.New("invalid ACCESS_TOKEN_TIME in env")
+	}
+
+	refreshDays, err := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
+	if err != nil {
+		return nil, "", "", errors.New("invalid REFRESH_TOKEN_TIME in env")
+	}
+
 	// Get company name exists
 	client, err := svc.repo.GetClientByCompanyName(ctx, req.CompanyName)
 	if err != nil || client == nil {
@@ -58,13 +69,13 @@ func (svc *AuthService) Login(ctx context.Context, req *requests.LoginRequest) (
 	}
 
 	// Access token (short-lived, 15 min)
-	accessToken, err := auth.GenerateAccessToken(client.ID, client.CompanyName, 1) // 1 hour for now
+	accessToken, err := auth.GenerateAccessToken(client.ID, client.CompanyName, accessHours)
 	if err != nil {
 		return nil, "", "", errors.New("could not generate access token")
 	}
 
 	// Refresh token (long-lived, 7 days)
-	refreshToken, err := auth.GenerateRefreshToken(client.ID, client.CompanyName, 7) // 7 days for now
+	refreshToken, err := auth.GenerateRefreshToken(client.ID, client.CompanyName, refreshDays) 
 	if err != nil {
 		return nil, "", "", errors.New("could not generate refresh token")
 	}
