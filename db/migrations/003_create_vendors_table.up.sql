@@ -1,0 +1,10 @@
+CREATE TABLE vendors (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    countries_supported JSON NOT NULL,
+    services_offered JSON NOT NULL,
+    rating FLOAT DEFAULT 0,
+    response_sla_hours INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

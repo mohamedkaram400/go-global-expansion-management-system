@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
+	// "github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http"
@@ -37,6 +38,8 @@ func main() {
 
 	defer mongo.Disconnect(context.Background())
 
+	// seeders.SeedAdminUser(mysql)  // Run only once
+
 	// 5. Service, Repo and Handlers
 	// Auth Module
 	authRepo := repositories.NewAuthRepo(mysql)
@@ -47,6 +50,11 @@ func main() {
 	clientRepo := repositories.NewClientRepo(mysql)
 	clientService := services.NewClientService(clientRepo)
 	clientHandler := http.NewClientHandler(clientService)
+
+	// User Module
+	userRepo := repositories.NewUserRepo(mysql)
+	userService := services.NewUserService(userRepo)
+	userHandler := http.NewUserHandler(userService)
 
 	// Vendor Module
 	vendorRepo := repositories.NewVendorRepo(mysql)
@@ -65,6 +73,7 @@ func main() {
 	routes.RegisterAuthRoutes(v1,   authHandler)
 	routes.RegisterClientRoutes(v1, clientHandler)
 	routes.RegisterVendorRoutes(v1, vendorHandler)
+	routes.RegisterUserRoutes(v1, userHandler)
 
 	// 9. Test server
 	TestServer(router)
