@@ -27,14 +27,14 @@ func (r *UserRepo) GetAllUsers(ctx context.Context, skip int, limit int) ([]enti
     return users, nil
 }
 
-func (r *UserRepo) FinduserByID(ctx context.Context, userID string) (*entities.User, error) {
+func (r *UserRepo) FindUserByID(ctx context.Context, userID string) (*entities.User, error) {
 	var user entities.User
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", userID).
 		First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
-		}
+		} 
 		return nil, err
 	}
 	return &user, nil
@@ -82,7 +82,7 @@ func (r *UserRepo) UpdateUserByID(ctx context.Context, userID string, updates ma
     return user, nil
 }
 
-func (r *UserRepo) DeleteuserByID(ctx context.Context, userID string) (int, error) {
+func (r *UserRepo) DeleteUserByID(ctx context.Context, userID string) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", userID).
 		Delete(&entities.User{}).Error; err != nil {

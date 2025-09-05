@@ -6,6 +6,7 @@ import (
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
 )
 
@@ -27,13 +28,16 @@ func (svc *UserService) FindUserByID(ctx context.Context, userID string) (*entit
 }
 
 func (svc *UserService) InsertUser(ctx context.Context, req *requests.UserRequest) (*entities.User, error) {
+
+	hashedPassword, _ := pkg.HashPassword(req.Password)
+
 	user := &entities.User{
 		Name: 		req.Name,
 		Email: 		req.Email,
 		Role: 		req.Role,
-		Password: 	req.Password,
+		Password: 	hashedPassword, 
 	}
-
+ 
 	existing, _ := svc.Repo.GetByEmail(ctx, user.Email)
     if existing != nil && existing.ID != user.ID {
         return nil, errors.New("email already in use")
@@ -52,11 +56,7 @@ func (svc *UserService) UpdateUserByID(ctx context.Context, userID string, newUs
 	if newUser.Email != "" {
 		updates["email"] = newUser.Email
 	}
-
-	if newUser.Role != "" {
-		updates["role"] = newUser.Role
-	}
-
+	
 	if len(updates) == 0 {
 		return nil, errors.New("no fields to update")
 	}
