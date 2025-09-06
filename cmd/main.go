@@ -7,10 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
+	
 	// "github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories"
+	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/auth"
+	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/auth"
+    authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/auth"
+	authRoute "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes"
 )
 
@@ -41,10 +46,15 @@ func main() {
 	// seeders.SeedAdminUser(mysql)  // Run only once
 
 	// 5. Service, Repo and Handlers
-	// Auth Module
-	authRepo := repositories.NewAuthRepo(mysql)
-	authService := services.NewAuthService(authRepo)
-	authHandler := http.NewAuthHandler(authService)
+	// User Auth Module
+	authUserRepo := authRepo.NewUserAuthRepo(mysql)
+	authUserService := authService.NewUserAuthService(authUserRepo)
+	authUserHandler := authHandler.NewUserAuthHandler(authUserService)
+
+	// Client Auth Module
+	authClientRepo := authRepo.NewClientAuthRepo(mysql)
+	authClientService := authService.NewClientAuthService(authClientRepo)
+	authClientHandler := authHandler.NewClientAuthHandler(authClientService)
 
 	// Client Module
 	clientRepo := repositories.NewClientRepo(mysql)
@@ -70,7 +80,8 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	// 8. Register routes by module
-	routes.RegisterAuthRoutes(v1,   authHandler)
+	authRoute.RegisterUserAuthRoutes(v1,   authUserHandler)
+	authRoute.RegisterClientAuthRoutes(v1,   authClientHandler)
 	routes.RegisterClientRoutes(v1, clientHandler)
 	routes.RegisterVendorRoutes(v1, vendorHandler)
 	routes.RegisterUserRoutes(v1, userHandler)

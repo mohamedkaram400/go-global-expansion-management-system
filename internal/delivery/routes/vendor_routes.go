@@ -9,7 +9,7 @@ import (
 func RegisterVendorRoutes(rg *gin.RouterGroup, vendorHandler *http.VendorHandler) {
 	vendor := rg.Group("/vendor")
 	vendor.Use(middlewares.JWTAuth())
-	// vendor.Use(middlewares.JWTAuth())
+	// vendor.Use(middlewares.AdminAuth())
 
 	{
 		vendor.POST("/create-vendor", vendorHandler.Create)

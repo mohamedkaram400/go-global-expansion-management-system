@@ -9,6 +9,7 @@ import (
 func RegisterClientRoutes(rg *gin.RouterGroup, clientHandler *http.ClientHandler) {
 	client := rg.Group("/client")
 	client.Use(middlewares.JWTAuth())
+	// client.Use(middlewares.AdminAuth())
 
 	{
 		client.POST("/create-client", clientHandler.Create)

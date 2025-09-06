@@ -62,3 +62,5 @@ func ValidateJWT(tokenString string) (uint, error) {
 	
 	return uint(clientIDFloat), nil
 }
+
+// how i can make new middleware check if request come from admin user allow it other wise rejecte 
