@@ -1,13 +1,14 @@
-package http
+package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	services "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/auth"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/responses"
+	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/auth"
+	requests "github.com/mohamedkaram400/go-global-expansion-management-system/requests/auth"
+	responses "github.com/mohamedkaram400/go-global-expansion-management-system/responses/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/responses/generic_api_response"
 )
 
@@ -19,51 +20,24 @@ func NewUserAuthHandler(service *services.UserAuthService) *UserAuthHandler {
 	return &UserAuthHandler{service: service} 
 }
 
-func (h *UserAuthHandler) Register(c *gin.Context) {
-    var req requests.RegisterRequest
-
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    newClient, err := h.service.Register(c, &req)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-	response := generic_api_response.APIResponse{
-		Message: "Client Registerd Successfully",
-		Data: responses.RegisterClientResponse{
-			ID:           newClient.ID,
-			CompanyName:  newClient.CompanyName,
-			ContactEmail: newClient.ContactEmail,
-		},
-	}
-
-	c.JSON(http.StatusCreated, response)
-}
-
 func (h *UserAuthHandler) Login(c *gin.Context) {
-	var req requests.LoginRequest
+	var req requests.UserLoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	client, accessToken, refreshToken, err := h.service.Login(c, &req)
+	user, accessToken, refreshToken, err := h.service.Login(c, &req)
 	if err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	}
 
 	response := generic_api_response.APIResponse{
-		Message: "Client Login Successfully",
-		Data: responses.LoginClientResponse{
-			ID:           client.ID,
-			CompanyName:  client.CompanyName,
-			ContactEmail: client.ContactEmail,
+		Message: "User Login Successfully",
+		Data: responses.LoginUserResponse{
+			ID:           user.ID,
+			Email:        user.Email,
 			AccessToken:  accessToken,
 			RefrashToken: refreshToken,
 		},
@@ -73,23 +47,25 @@ func (h *UserAuthHandler) Login(c *gin.Context) {
 }
 
 func (h *UserAuthHandler) Logout(c *gin.Context) {
-	// 1️⃣ Try to get clientID from Gin Context
-	clientIDVal, exists := c.Get(string(middlewares.ClientIDKey))
+	// 1️⃣ Try to get userID from Gin Context
+	fmt.Println(c)
+
+	userIDVal, exists := c.Get(string(middlewares.UserIDKey))
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
 
-	// 2️⃣ Check if clientID is a valid string
-	clientID, ok := clientIDVal.(uint)
+	// 2️⃣ Check if userID is a valid string
+	userID, ok := userIDVal.(uint)
 
-	if !ok || clientID == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid client ID"})
+	if !ok || userID == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user ID"})
 		return
 	}
 
 	// 3️⃣ Call service.Logout to remove refresh token from Redis
-	if err := h.service.Logout(clientID); err != nil {
+	if err := h.service.Logout(userID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

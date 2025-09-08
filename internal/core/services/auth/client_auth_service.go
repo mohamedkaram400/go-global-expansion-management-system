@@ -12,7 +12,7 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	ports "github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
+	requests "github.com/mohamedkaram400/go-global-expansion-management-system/requests/auth"
 )
 
 type ClientAuthService struct {
@@ -23,7 +23,7 @@ func NewClientAuthService(repo ports.ClientAuthRepository) *ClientAuthService {
 	return &ClientAuthService{repo: repo}
 }
 
-func (svc *ClientAuthService) Register(ctx context.Context, req *requests.RegisterRequest) (*entities.Client, error) {
+func (svc *ClientAuthService) Register(ctx context.Context, req *requests.ClientRegisterRequest) (*entities.Client, error) {
 	// Check if company name exists
 	existing, _ := svc.repo.GetClientByCompanyName(ctx, req.CompanyName)
 	if existing != nil {
@@ -47,7 +47,7 @@ func (svc *ClientAuthService) Register(ctx context.Context, req *requests.Regist
 	return svc.repo.Register(ctx, client)
 }
 
-func (svc *ClientAuthService) Login(ctx context.Context, req *requests.LoginRequest) (*entities.Client, string, string, error) {
+func (svc *ClientAuthService) Login(ctx context.Context, req *requests.ClientLoginRequest) (*entities.Client, string, string, error) {
 	accessHours, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	if err != nil {
 		return nil, "", "", errors.New("invalid ACCESS_TOKEN_TIME in env")
@@ -69,13 +69,13 @@ func (svc *ClientAuthService) Login(ctx context.Context, req *requests.LoginRequ
 	}
 
 	// Access token (short-lived, 15 min)
-	accessToken, err := auth.GenerateAccessToken(client.ID, client.CompanyName, accessHours)
+	accessToken, err := auth.GenerateAccessToken("client_id", client.ID, accessHours)
 	if err != nil {
 		return nil, "", "", errors.New("could not generate access token")
 	}
 
 	// Refresh token (long-lived, 7 days)
-	refreshToken, err := auth.GenerateRefreshToken(client.ID, client.CompanyName, refreshDays) 
+	refreshToken, err := auth.GenerateRefreshToken("client_id", client.ID, refreshDays) 
 	if err != nil {
 		return nil, "", "", errors.New("could not generate refresh token")
 	}

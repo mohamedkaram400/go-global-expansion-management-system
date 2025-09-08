@@ -1,13 +1,13 @@
-package http
+package auth
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/auth"
 	services "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/auth"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/responses"
+	requests "github.com/mohamedkaram400/go-global-expansion-management-system/requests/auth"
+	responses "github.com/mohamedkaram400/go-global-expansion-management-system/responses/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/responses/generic_api_response"
 )
 
@@ -20,7 +20,7 @@ func NewClientAuthHandler(service *services.ClientAuthService) *ClientAuthHandle
 }
 
 func (h *ClientAuthHandler) Register(c *gin.Context) {
-    var req requests.RegisterRequest
+    var req requests.ClientRegisterRequest
 
     if err := c.ShouldBindJSON(&req); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,7 +46,7 @@ func (h *ClientAuthHandler) Register(c *gin.Context) {
 }
 
 func (h *ClientAuthHandler) Login(c *gin.Context) {
-	var req requests.LoginRequest
+	var req requests.ClientLoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

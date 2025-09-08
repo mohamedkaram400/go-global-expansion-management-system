@@ -1,9 +1,9 @@
-package routes
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
 	AuthHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/auth"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares"
+	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/auth"
 )
 
 func RegisterClientAuthRoutes(rg *gin.RouterGroup, authHandler *AuthHandler.ClientAuthHandler) {
@@ -12,6 +12,6 @@ func RegisterClientAuthRoutes(rg *gin.RouterGroup, authHandler *AuthHandler.Clie
 	{
 		auth.POST("/register", authHandler.Register)
 		auth.POST("/login", authHandler.Login)
-        auth.POST("/logout", middlewares.JWTAuth(), authHandler.Logout)
+        auth.POST("/logout", middlewares.ClientJWTAuth(), authHandler.Logout)
 	}
 }

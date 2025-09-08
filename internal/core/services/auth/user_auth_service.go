@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -12,7 +13,7 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	ports "github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/requests"
+	requests "github.com/mohamedkaram400/go-global-expansion-management-system/requests/auth"
 )
 
 type UserAuthService struct {
@@ -23,31 +24,7 @@ func NewUserAuthService(repo ports.UserAuthRepository) *UserAuthService {
 	return &UserAuthService{repo: repo}
 }
 
-func (svc *UserAuthService) Register(ctx context.Context, req *requests.RegisterRequest) (*entities.User, error) {
-	// Check if company name exists
-	existing, _ := svc.repo.GetUserByEmail(ctx, req.CompanyName)
-	if existing != nil {
-        return nil, errors.New("company name already exists")
-	}
-
-	// Hash password
-	hashedPwd, err := pkg.HashPassword(req.Password)
-	if err != nil {
-		return nil, err
-	} 
-
-	// Create User model
-	user := &entities.User{
-		CompanyName:    req.CompanyName,
-		ContactEmail:   req.ContactEmail,
-		Password:   	hashedPwd,
-	}
-
-	// Save to DB via repo
-	return svc.repo.Register(ctx, user)
-}
-
-func (svc *UserAuthService) Login(ctx context.Context, req *requests.LoginRequest) (*entities.User, string, string, error) {
+func (svc *UserAuthService) Login(ctx context.Context, req *requests.UserLoginRequest) (*entities.User, string, string, error) {
 	accessHours, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	if err != nil {
 		return nil, "", "", errors.New("invalid ACCESS_TOKEN_TIME in env")
@@ -61,7 +38,7 @@ func (svc *UserAuthService) Login(ctx context.Context, req *requests.LoginReques
 	// Get company name exists
 	user, err := svc.repo.GetUserByEmail(ctx, req.Email)
 	if err != nil || user == nil {
-		return nil, "", "", errors.New("company not found")
+		return nil, "", "", errors.New("email not found")
 	}
 
 	if err := pkg.CheckPassword(user.Password, req.Password); err != nil {
@@ -69,13 +46,13 @@ func (svc *UserAuthService) Login(ctx context.Context, req *requests.LoginReques
 	}
 
 	// Access token (short-lived, 15 min)
-	accessToken, err := auth.GenerateAccessToken(user.ID, user.Email, accessHours)
+	accessToken, err := auth.GenerateAccessToken("user_id", user.ID, accessHours)
 	if err != nil {
 		return nil, "", "", errors.New("could not generate access token")
 	}
 
 	// Refresh token (long-lived, 7 days)
-	refreshToken, err := auth.GenerateRefreshToken(user.ID, user.Email, refreshDays) 
+	refreshToken, err := auth.GenerateRefreshToken("user_id", user.ID, refreshDays) 
 	if err != nil {
 		return nil, "", "", errors.New("could not generate refresh token")
 	}
@@ -90,5 +67,6 @@ func (svc *UserAuthService) Login(ctx context.Context, req *requests.LoginReques
 }
 
 func (svc *UserAuthService) Logout(userID uint) error {
+	fmt.Println(userID)
 	return conn.RedisClient.Del(context.Background(), strconv.FormatUint(uint64(userID), 10)).Err()
 }

@@ -3,12 +3,12 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares"
+  	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/auth"
 )
 
 func RegisterUserRoutes(rg *gin.RouterGroup, userHandler *http.UserHandler) {
 	user := rg.Group("/user")
-	user.Use(middlewares.JWTAuth())
+	user.Use(middlewares.UserJWTAuth())
 	// user.Use(middlewares.AdminAuth())
 
 	{

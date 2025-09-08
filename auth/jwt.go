@@ -17,28 +17,27 @@ const (
 	RefreshToken TokenType = "refresh"
 )
 
-func GenerateToken(clientID uint, CompanyName string, duration time.Duration, tokenType TokenType) (string, error) {
+func GenerateToken(subjectKey string, subjectID uint, duration time.Duration, tokenType TokenType) (string, error) {
 
 	claims := jwt.MapClaims{
-		"client_id"		: clientID,
-		"company_name"	: CompanyName,
+		subjectKey		: subjectID,
 		"exp"			: time.Now().Add(duration).Unix(),
 		"type"			: tokenType,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
+} 
+
+func GenerateAccessToken(subjectKey string, subjectID uint, hours int) (string, error) {
+	return GenerateToken(subjectKey, subjectID,  time.Duration(hours)*time.Hour, AccessToken)
 }
 
-func GenerateAccessToken(clientID uint, CompanyName string, hours int) (string, error) {
-	return GenerateToken(clientID, CompanyName, time.Duration(hours)*time.Hour, AccessToken)
+func GenerateRefreshToken(subjectKey string, subjectID uint, days int) (string, error) {
+	return GenerateToken(subjectKey, subjectID,  time.Duration(days)*24*time.Hour, RefreshToken)
 }
 
-func GenerateRefreshToken(clientID uint, CompanyName string, days int) (string, error) {
-	return GenerateToken(clientID, CompanyName, time.Duration(days)*24*time.Hour, RefreshToken)
-}
-
-func ValidateJWT(tokenString string) (uint, error) {
+func ValidateJWT(tokenString string, key string) (uint, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -55,12 +54,12 @@ func ValidateJWT(tokenString string) (uint, error) {
 		return 0, errors.New("invalid claims")
 	}
 	
-	clientIDFloat, ok := claims["client_id"].(float64)
+	idFloat, ok := claims[key].(float64)
 	if !ok {
-		return 0, errors.New("client id not found in token")
+		return 0, errors.New("id not found in token")
 	}
 	
-	return uint(clientIDFloat), nil
+	return uint(idFloat), nil
 }
 
 // how i can make new middleware check if request come from admin user allow it other wise rejecte 

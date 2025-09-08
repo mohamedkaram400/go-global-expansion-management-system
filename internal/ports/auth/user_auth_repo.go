@@ -7,7 +7,6 @@ import (
 
 type UserAuthRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (*entities.User, error)
-	Register(ctx context.Context, user *entities.User) (*entities.User, error)
 	Logout(userID string) (string, error)
 }
  
