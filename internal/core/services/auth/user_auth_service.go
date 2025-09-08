@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	ports "github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/auth"
@@ -25,15 +25,10 @@ func NewUserAuthService(repo ports.UserAuthRepository) *UserAuthService {
 }
 
 func (svc *UserAuthService) Login(ctx context.Context, req *requests.UserLoginRequest) (*entities.User, string, string, error) {
-	accessHours, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
-	if err != nil {
-		return nil, "", "", errors.New("invalid ACCESS_TOKEN_TIME in env")
-	}
+	config := config.LoadConfig()
 
-	refreshDays, err := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
-	if err != nil {
-		return nil, "", "", errors.New("invalid REFRESH_TOKEN_TIME in env")
-	}
+	accessHours := config.AccessTokenTime
+	refreshDays := config.RefrashTokenTime
 
 	// Get company name exists
 	user, err := svc.repo.GetUserByEmail(ctx, req.Email)

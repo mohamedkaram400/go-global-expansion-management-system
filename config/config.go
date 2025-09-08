@@ -16,6 +16,8 @@ type Config struct {
 	Port           string
 	RedisHost      string
 	RateNumber     int
+	AccessTokenTime      int
+	RefrashTokenTime     int
 }
 
 func LoadConfig() *Config {
@@ -24,10 +26,9 @@ func LoadConfig() *Config {
 		log.Println("⚠️ No .env file found, reading from environment")
 	}
 
-	rateInt, err := strconv.Atoi(os.Getenv("RATE_NUMBER"))
-	if err != nil {
-		rateInt = 10
-	}
+	rateInt, _ := strconv.Atoi(os.Getenv("RATE_NUMBER"))
+	accessToken, _ := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
+	refrashToken, _ := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
 
 	return &Config{
 		MySQLURI:       os.Getenv("MYSQL_URI"),
@@ -36,6 +37,8 @@ func LoadConfig() *Config {
 		CollectionName: os.Getenv("COLLECTION_NAME"),
 		Port:           getOrDefault("PORT", ":9999"),
 		RedisHost:      os.Getenv("REDIS_HOST"),
+		AccessTokenTime:       accessToken,
+		RefrashTokenTime:      refrashToken,
 		RateNumber:     rateInt,
 	}
 }

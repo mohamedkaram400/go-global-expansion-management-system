@@ -3,11 +3,11 @@ package services
 import (
 	"context"
 	"errors"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
 	ports "github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/auth"
@@ -48,15 +48,10 @@ func (svc *ClientAuthService) Register(ctx context.Context, req *requests.Client
 }
 
 func (svc *ClientAuthService) Login(ctx context.Context, req *requests.ClientLoginRequest) (*entities.Client, string, string, error) {
-	accessHours, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
-	if err != nil {
-		return nil, "", "", errors.New("invalid ACCESS_TOKEN_TIME in env")
-	}
+	config := config.LoadConfig()
 
-	refreshDays, err := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
-	if err != nil {
-		return nil, "", "", errors.New("invalid REFRESH_TOKEN_TIME in env")
-	}
+	accessHours := config.AccessTokenTime
+	refreshDays := config.RefrashTokenTime
 
 	// Get company name exists
 	client, err := svc.repo.GetClientByCompanyName(ctx, req.CompanyName)
