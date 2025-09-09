@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 )
 
@@ -26,13 +25,4 @@ func ConvertClientsToDTOs(clients []*entities.Client) []*ClientDTO {
 		dtos[i] = ConvertToClientDTO(client)
 	}
 	return dtos
-}
-
-func CheckPassword(hashed, plain string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hashed), []byte(plain))
-}
-
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
 }

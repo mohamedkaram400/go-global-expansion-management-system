@@ -3,12 +3,8 @@ package services
 import (
 	"context"
 	"errors"
-	"strconv"
-	"time"
 
-	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	ports "github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
@@ -63,21 +59,13 @@ func (svc *ClientAuthService) Login(ctx context.Context, req *requests.ClientLog
 		return nil, "", "", errors.New("invalid password")
 	}
 
-	// Access token (short-lived, 15 min)
-	accessToken, err := auth.GenerateAccessToken("client_id", client.ID, accessHours)
+	accessToken, refreshToken, err := pkg.IssueTokens("client_id", client.ID, accessHours, refreshDays)
 	if err != nil {
-		return nil, "", "", errors.New("could not generate access token")
-	}
-
-	// Refresh token (long-lived, 7 days)
-	refreshToken, err := auth.GenerateRefreshToken("client_id", client.ID, refreshDays) 
-	if err != nil {
-		return nil, "", "", errors.New("could not generate refresh token")
+		return nil, "", "", errors.New("failed to generate access and refresh token")
 	}
 
 	// Store refresh token in Redis or DB
-	err = conn.RedisClient.Set(ctx, strconv.Itoa(int(client.ID)), refreshToken, 7*24*time.Hour).Err()
-	if err != nil {
+	if err := pkg.StoreRefreshToken(ctx, client.ID, refreshToken, refreshDays); err != nil {
 		return nil, "", "", errors.New("failed to store refresh token")
 	}
 
@@ -85,5 +73,9 @@ func (svc *ClientAuthService) Login(ctx context.Context, req *requests.ClientLog
 }
 
 func (svc *ClientAuthService) Logout(clientID uint) error {
-	return conn.RedisClient.Del(context.Background(), strconv.FormatUint(uint64(clientID), 10)).Err()
+	err := pkg.DeleteRefreshToken(clientID)
+	if err != nil {
+		return errors.New("failed to store refresh token")
+	}
+	return errors.New("")
 }
