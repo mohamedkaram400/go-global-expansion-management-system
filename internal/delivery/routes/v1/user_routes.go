@@ -8,8 +8,7 @@ import (
 
 func RegisterUserRoutes(rg *gin.RouterGroup, userHandler *http.UserHandler) {
 	user := rg.Group("/user")
-	user.Use(middlewares.UserJWTAuth())
-	// user.Use(middlewares.AdminAuth())
+	user.Use(middlewares.AdminJWTAuth())
 
 	{
 		user.POST("/create-user", userHandler.Create)

@@ -11,7 +11,7 @@ import (
 const UserIDKey string = "userID"
 
 
-func UserJWTAuth() gin.HandlerFunc {
+func AdminJWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Get token from header
 		authHeader := c.GetHeader("Authorization")
