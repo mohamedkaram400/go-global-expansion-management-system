@@ -3,7 +3,7 @@ package seeders
 import (
 	"log"
 
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
 	"gorm.io/gorm"
 )

@@ -9,14 +9,14 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	
 	// "github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories"
-	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/auth"
-	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/auth"
-    authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/auth"
-	authRoute "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/auth"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
+	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1/auth"
+	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1/auth"
+    authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1/auth"
+	authRoute "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/v1/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/v1"
 )
 
 func main() {

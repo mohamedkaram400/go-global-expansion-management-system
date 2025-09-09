@@ -2,7 +2,7 @@ package pkg
 
 import (
 	"golang.org/x/crypto/bcrypt"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 )
 
 type ClientDTO struct {
