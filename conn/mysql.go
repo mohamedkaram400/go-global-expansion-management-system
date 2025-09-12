@@ -12,6 +12,6 @@ func ConnectMySQL(dsn string) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("✅ Connected to MySQL")
+	log.Println("✅ Connected to MySQL successfully")
 	return db, nil
 }

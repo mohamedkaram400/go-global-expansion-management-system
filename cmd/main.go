@@ -71,6 +71,11 @@ func main() {
 	vendorService := services.NewVendorService(vendorRepo)
 	vendorHandler := http.NewVendorHandler(vendorService)
 
+	// Vendor Module
+	projectRepo := repositories.NewProjectRepo(mysql)
+	projectService := services.NewProjectService(projectRepo)
+	projectHandler := http.NewProjectHandler(projectService)
+
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
@@ -85,6 +90,7 @@ func main() {
 	routes.RegisterClientRoutes(v1, clientHandler)
 	routes.RegisterVendorRoutes(v1, vendorHandler)
 	routes.RegisterUserRoutes(v1, userHandler)
+	routes.RegisterProjectRoutes(v1, projectHandler)
 
 	// 9. Test server
 	TestServer(router)
