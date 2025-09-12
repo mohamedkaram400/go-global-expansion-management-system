@@ -1,4 +1,4 @@
-CREATE TABLE matches (
+CREATE TABLE Matchs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     project_id BIGINT NOT NULL,
     vendor_id BIGINT NOT NULL,

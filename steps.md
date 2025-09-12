@@ -1,6 +1,6 @@
 4. Project-Vendor Matching
 
-Endpoint: /projects/{id}/matches/rebuild
+Endpoint: /projects/{id}/Matchs/rebuild
 Logic:
 
 Vendor’s countries_supported must include project’s country.
@@ -9,7 +9,7 @@ Vendor’s services_offered ∩ project’s services_needed must not be empty.
 
 Score = services_overlap * 2 + rating + SLA_weight.
 
-Save to matches with upsert logic (avoid duplicates).
+Save to Matchs with upsert logic (avoid duplicates).
 
 
 

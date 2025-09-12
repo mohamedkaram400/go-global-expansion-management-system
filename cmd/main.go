@@ -71,10 +71,15 @@ func main() {
 	vendorService := services.NewVendorService(vendorRepo)
 	vendorHandler := http.NewVendorHandler(vendorService)
 
-	// Vendor Module
+	// Project Module
 	projectRepo := repositories.NewProjectRepo(mysql)
 	projectService := services.NewProjectService(projectRepo)
 	projectHandler := http.NewProjectHandler(projectService)
+
+	// Match Module
+	matchRepo := repositories.NewMatchRepo(mysql)
+	matchService := services.NewMatchService(matchRepo)
+	matchHandler := http.NewMatchHandler(matchService, projectService)
 
 	// 6. Init router
 	router := gin.Default()
@@ -91,6 +96,7 @@ func main() {
 	routes.RegisterVendorRoutes(v1, vendorHandler)
 	routes.RegisterUserRoutes(v1, userHandler)
 	routes.RegisterProjectRoutes(v1, projectHandler)
+	routes.RegisterMatchRoutes(v1, matchHandler)
 
 	// 9. Test server
 	TestServer(router)
