@@ -1,1 +1,1 @@
-DROP TABLE Matchs;
+DROP TABLE matches;
