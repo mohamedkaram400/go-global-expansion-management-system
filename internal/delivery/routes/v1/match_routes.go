@@ -9,6 +9,6 @@ func RegisterMatchRoutes(rg *gin.RouterGroup, clientHandler *http.MatchHandler) 
 	client := rg.Group("/match")
 
 	{
-		client.POST("/projects/:id/match/rebuild", clientHandler.Rebuild)
+		client.POST("/projects/:project_id/rebuild", clientHandler.Rebuild)
 	}
 }

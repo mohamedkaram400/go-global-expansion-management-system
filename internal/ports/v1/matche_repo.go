@@ -10,3 +10,4 @@ type MatchRepository interface {
 	GetVendorsForProject(ctx context.Context, project *entities.Project) ([]entities.Vendor, error)
 	UpsertMatch(ctx context.Context, match *entities.Match) error
 }
+ 

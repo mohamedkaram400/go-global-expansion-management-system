@@ -27,6 +27,8 @@ func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.
 		return nil, err
 	}
 
+	// fmt.Printf("✅ Project retruned: %+v\n", vendors) // debug
+
 	return vendors, nil
 }
 

@@ -78,8 +78,8 @@ func main() {
 
 	// Match Module
 	matchRepo := repositories.NewMatchRepo(mysql)
-	matchService := services.NewMatchService(matchRepo)
-	matchHandler := http.NewMatchHandler(matchService, projectService)
+	matchService := services.NewMatchService(matchRepo, projectService)
+	matchHandler := http.NewMatchHandler(matchService)
 
 	// 6. Init router
 	router := gin.Default()
