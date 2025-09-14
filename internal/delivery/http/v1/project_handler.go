@@ -42,7 +42,7 @@ func (h *ProjectHandler) Index(c *gin.Context) {
 }
 
 func (h *ProjectHandler) Show(c *gin.Context) {
-    projectID := c.Param("id")
+    projectID, _ := strconv.Atoi(c.Param("id"))
 
 
 	newProject, err := h.Service.FindProjectByID(c, projectID)
@@ -84,7 +84,7 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 } 
 
 func (h *ProjectHandler) Update(c *gin.Context) {
-    projectID := c.Param("id")
+	projectID, _ := strconv.Atoi(c.Param("id"))
 	
     var req requests.ProjectRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -117,7 +117,7 @@ func (h *ProjectHandler) Update(c *gin.Context) {
 }
 
 func (h *ProjectHandler) Destroy(c *gin.Context) {
-    projectID := c.Param("id")
+	projectID, _ := strconv.Atoi(c.Param("id"))
 
     _, err := h.Service.DeleteProjectByID(c.Request.Context(), projectID)
     if err != nil {

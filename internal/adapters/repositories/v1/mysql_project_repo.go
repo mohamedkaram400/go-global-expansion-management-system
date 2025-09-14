@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"gorm.io/gorm"
@@ -28,7 +27,7 @@ func (r *ProjectRepo) GetAllProjects(ctx context.Context, skip int, limit int) (
 	return projects, nil
 }
 
-func (r *ProjectRepo) FindProjectByID(ctx context.Context, projectID string) (*entities.Project, error) {
+func (r *ProjectRepo) FindProjectByID(ctx context.Context, projectID int) (*entities.Project, error) {
 	var project entities.Project
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", projectID).
@@ -38,7 +37,6 @@ func (r *ProjectRepo) FindProjectByID(ctx context.Context, projectID string) (*e
 		}
 		return nil, err
 	}
-	fmt.Printf("✅ Project inserted: %+v\n", project) // debug
 
 	return &project, nil
 }
@@ -50,7 +48,7 @@ func (r *ProjectRepo) InsertProject(ctx context.Context, project *entities.Proje
 	return project, nil
 }
 
-func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID string, updates map[string]interface{}) (*entities.Project, error) {
+func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID int, updates map[string]interface{}) (*entities.Project, error) {
 
 	project := &entities.Project{}
 
@@ -72,7 +70,7 @@ func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID string, u
 	return project, nil
 }
 
-func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID string) (int, error) {
+func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID int) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", projectID).
 		Delete(&entities.Project{}).Error; err != nil {
