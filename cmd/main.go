@@ -81,6 +81,11 @@ func main() {
 	matchService := services.NewMatchService(matchRepo, projectService)
 	matchHandler := http.NewMatchHandler(matchService)
 
+	// Research Document Module with (Mongo DB)
+	researchDocumentRepo := repositories.NewResearchDocumentRepo(mongo)
+	researchDocumentService := services.NewResearchDocumentService(researchDocumentRepo, projectService)
+	researchDocumentHandler := http.NewResearchDocumentHandler(researchDocumentService)
+
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
@@ -97,6 +102,7 @@ func main() {
 	routes.RegisterUserRoutes(v1, userHandler)
 	routes.RegisterProjectRoutes(v1, projectHandler)
 	routes.RegisterMatchRoutes(v1, matchHandler)
+	routes.RegisterResearchDocumentRoutes(v1, researchDocumentHandler)
 
 	// 9. Test server
 	TestServer(router)
