@@ -20,11 +20,15 @@ func NewMatchHandler(matchService *services.MatchService) *MatchHandler {
 
 func (h *MatchHandler) Rebuild(c *gin.Context) {
 
-	projectID, err := strconv.Atoi(c.Param("project_id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid project_id"})
-		return
-	}
+	idStr := c.Param("project_id")
+	// Parse string to uint64 first
+    projectID64, err := strconv.ParseUint(idStr, 10, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project id"})
+        return
+    }
+
+	projectID := uint(projectID64)
 
 	Matchs, err := h.MatchService.Rebuild(c.Request.Context(), projectID)
 	if err != nil {

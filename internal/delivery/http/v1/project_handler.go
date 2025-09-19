@@ -42,9 +42,14 @@ func (h *ProjectHandler) Index(c *gin.Context) {
 }
 
 func (h *ProjectHandler) Show(c *gin.Context) {
-    projectID, _ := strconv.Atoi(c.Param("id"))
+	idStr := c.Param("id")
 
+	projectId64, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 
+	projectID := uint(projectId64)
 	newProject, err := h.Service.FindProjectByID(c, projectID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -84,8 +89,17 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 } 
 
 func (h *ProjectHandler) Update(c *gin.Context) {
-	projectID, _ := strconv.Atoi(c.Param("id"))
-	
+	idStr := c.Param("id")
+
+	// Parse string to uint64 first
+    projectID64, err := strconv.ParseUint(idStr, 10, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project id"})
+        return
+    }
+
+	projectID := uint(projectID64)
+
     var req requests.ProjectRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -117,13 +131,23 @@ func (h *ProjectHandler) Update(c *gin.Context) {
 }
 
 func (h *ProjectHandler) Destroy(c *gin.Context) {
-	projectID, _ := strconv.Atoi(c.Param("id"))
+	idStr := c.Param("id")
 
-    _, err := h.Service.DeleteProjectByID(c.Request.Context(), projectID)
+	// Parse string to uint64 first
+    projectID64, err := strconv.ParseUint(idStr, 10, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project id"})
+        return
+    }
+
+	projectID := uint(projectID64)
+
+    _, err = h.Service.DeleteProjectByID(c.Request.Context(), projectID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
+	
 
 	c.JSON(http.StatusNoContent, nil)
 }

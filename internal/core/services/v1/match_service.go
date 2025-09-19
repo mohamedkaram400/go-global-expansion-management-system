@@ -18,7 +18,7 @@ func NewMatchService(repo ports.MatchRepository, projectService *ProjectService)
 	return &MatchService{MatchRepo: repo, ProjectService: projectService}
 }
 
-func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]entities.Match, error) {
+func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entities.Match, error) {
 
 	// Load project from DB
 	project, err := svc.ProjectService.FindProjectByID(ctx, projectID)

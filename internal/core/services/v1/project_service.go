@@ -22,7 +22,7 @@ func (svc *ProjectService) GetAllProjects(ctx context.Context, skip int, limit i
 	return svc.Repo.GetAllProjects(ctx, skip, limit)
 }
  
-func (svc *ProjectService) FindProjectByID(ctx context.Context, projectID int) (*entities.Project, error) {
+func (svc *ProjectService) FindProjectByID(ctx context.Context, projectID uint) (*entities.Project, error) {
 	return svc.Repo.FindProjectByID(ctx, projectID)
 
 }
@@ -45,7 +45,7 @@ func (svc *ProjectService) InsertProject(ctx context.Context, req *requests.Proj
 	return svc.Repo.InsertProject(ctx, project)
 }
 
-func (svc *ProjectService) UpdateProjectByID(ctx context.Context, projectID int, newProject *entities.Project) (*entities.Project, error) {
+func (svc *ProjectService) UpdateProjectByID(ctx context.Context, projectID uint, newProject *entities.Project) (*entities.Project, error) {
 	updates := map[string]interface{}{}
 
     if newProject.Country != "" {
@@ -71,7 +71,6 @@ func (svc *ProjectService) UpdateProjectByID(ctx context.Context, projectID int,
 	return svc.Repo.UpdateProjectByID(ctx, projectID, updates)
 }
 
-func (svc *ProjectService) DeleteProjectByID(ctx context.Context, projectID int) (int, error) {
+func (svc *ProjectService) DeleteProjectByID(ctx context.Context, projectID uint) (int, error) {
 	return svc.Repo.DeleteProjectByID(ctx, projectID)
-
 }
