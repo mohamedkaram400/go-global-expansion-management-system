@@ -26,7 +26,15 @@ func (r *ResearchDocumentRepo) UploadDocument(ctx context.Context, document *ent
 	return document, nil
 }
 
-func (r *ResearchDocumentRepo) SearchOnDocument(ctx context.Context, filter bson.M) ([]*entities.Document, error) {
+func (r *ResearchDocumentRepo) SearchOnDocument(ctx context.Context, searchTerm string) ([]*entities.Document, error) {
+	filter := bson.M{
+		"$or": []bson.M{
+			{"title": bson.M{"$regex": searchTerm, "$options": "i"}},
+			{"content": bson.M{"$regex": searchTerm, "$options": "i"}},
+			{"tags": bson.M{"$in": []string{searchTerm}}},
+		},
+	}
+
 	cursor, err := r.MongoCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

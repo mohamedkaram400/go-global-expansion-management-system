@@ -6,7 +6,6 @@ import (
 
 
 type DocumentResponse struct {
-	ID 		   	   uint 	`json:"id"`
 	ProjectId 	   uint 	`json:"project_id" `
 	Title  		   string 	`json:"title"`
 	Content 	   string	`json:"content"`
@@ -16,7 +15,6 @@ type DocumentResponse struct {
 
 func FormatDocument(document *entities.Document) DocumentResponse {
     return DocumentResponse{
-        ID:        document.ID,
         ProjectId: document.ProjectId,
         Title:     document.Title,
         Content:   document.Content,
