@@ -87,6 +87,10 @@ func main() {
 	researchDocumentService := services.NewResearchDocumentService(researchDocumentRepo)
 	researchDocumentHandler := http.NewResearchDocumentHandler(researchDocumentService, projectService)
 
+	// Analytics Module with (MySql, Mongo DB)
+	analyticsService := services.NewAnalyticsService(matchRepo, researchDocumentRepo)
+	AnalyticsHandler := http.NewAnalyticsHandler(analyticsService)
+
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
@@ -104,6 +108,7 @@ func main() {
 	routes.RegisterProjectRoutes(v1, projectHandler)
 	routes.RegisterMatchRoutes(v1, matchHandler)
 	routes.RegisterResearchDocumentRoutes(v1, researchDocumentHandler)
+	routes.RegisterAnalyticsRoutes(v1, AnalyticsHandler)
 
 	// 9. Test server
 	TestServer(router)
