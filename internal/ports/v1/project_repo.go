@@ -12,4 +12,5 @@ type ProjectRepository interface {
     GetAllProjects(ctx context.Context, skip int, limit int) ([]entities.Project, error)
     UpdateProjectByID(ctx context.Context, projectID uint, updates map[string]interface{}) (*entities.Project, error)
     DeleteProjectByID(ctx context.Context, projectID uint) (int, error)
+    GetProjectCountries(ctx context.Context) (map[uint]string, error)
 }

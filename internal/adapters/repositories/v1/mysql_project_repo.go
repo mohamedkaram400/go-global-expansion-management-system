@@ -79,3 +79,23 @@ func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID uint) (in
 
 	return 1, nil
 }
+
+func (r *ProjectRepo) GetProjectCountries(ctx context.Context) (map[uint]string, error) {
+	rows, err := r.DB.WithContext(ctx).Raw("SELECT id, country FROM projects").Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	result := make(map[uint]string)
+	for rows.Next() {
+		var id uint
+		var country string
+		if err := rows.Scan(&id, &country); err != nil {
+			return nil, err
+		}
+		result[id] = country
+	}
+
+	return result, nil
+}

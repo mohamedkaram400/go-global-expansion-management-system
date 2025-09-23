@@ -4,6 +4,6 @@ import "github.com/mohamedkaram400/go-global-expansion-management-system/interna
 
 type VendorAnalyticsResponse struct {
     Country           string            `json:"country"`
-    TopVendors        []entities.Vendor `json:"top_vendors"`
+    TopVendors        []entities.VendorAnalytics `json:"top_vendors"`
     ResearchDocsCount int               `json:"research_docs_count"`
 }

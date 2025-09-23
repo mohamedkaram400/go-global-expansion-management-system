@@ -9,6 +9,6 @@ import (
 type ResearchDocumentRepository interface {
 	UploadDocument(ctx context.Context, project *entities.Document) (*entities.Document, error)
 	SearchOnDocument(ctx context.Context, searchTerm string) ([]*entities.Document, error)
-	CountResearchDocsByCountry(ctx context.Context) (map[string]int, error)
+	CountResearchDocsByProject(ctx context.Context) (map[uint]int, error)
 }
  

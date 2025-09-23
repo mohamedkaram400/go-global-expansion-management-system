@@ -88,7 +88,7 @@ func main() {
 	researchDocumentHandler := http.NewResearchDocumentHandler(researchDocumentService, projectService)
 
 	// Analytics Module with (MySql, Mongo DB)
-	analyticsService := services.NewAnalyticsService(matchRepo, researchDocumentRepo)
+	analyticsService := services.NewAnalyticsService(matchRepo, researchDocumentRepo, projectRepo)
 	AnalyticsHandler := http.NewAnalyticsHandler(analyticsService)
 
 	// 6. Init router

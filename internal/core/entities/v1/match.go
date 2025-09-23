@@ -9,3 +9,10 @@ type Match struct {
 	CreatedAt    time.Time `json:"created_at" 		gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt    time.Time `json:"updated_at" 		gorm:"column:updated_at;autoUpdateTime"`
 }
+
+
+type VendorAnalytics struct {
+    ID            uint    `json:"id"`
+    Name          string  `json:"name"`
+    AvgMatchScore float64 `json:"avg_match_score"`
+}

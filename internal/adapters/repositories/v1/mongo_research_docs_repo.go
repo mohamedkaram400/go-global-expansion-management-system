@@ -49,31 +49,32 @@ func (r *ResearchDocumentRepo) SearchOnDocument(ctx context.Context, searchTerm 
 	return documents, nil
 }
 
-func (r *ResearchDocumentRepo) CountResearchDocsByCountry(ctx context.Context) (map[string]int, error) {
+func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (map[uint]int, error) {
+
 	pipeline := mongo.Pipeline{
 		{{Key: "$group", Value: bson.D{
-			{Key: "_id", Value: "$country"},
+			{Key: "_id", Value: "$project_id"},
 			{Key: "count", Value: bson.D{{Key: "$sum", Value: 1}}},
 		}}},
 	}
-
+	
 	cursor, err := r.MongoCollection.Aggregate(ctx, pipeline)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(ctx)
 
-	result := make(map[string]int)
+	result := make(map[uint]int)
 
 	for cursor.Next(ctx) {
 		var doc struct {
-			Country string `bson:"_id"`
-			Count   int    `bson:"count"`
+			ProjectID uint `bson:"_id"`
+			Count     int  `bson:"count"`
 		}
 		if err := cursor.Decode(&doc); err != nil {
 			return nil, err
 		}
-		result[doc.Country] = doc.Count
+		result[doc.ProjectID] = doc.Count
 	}
 
 	if err := cursor.Err(); err != nil {
