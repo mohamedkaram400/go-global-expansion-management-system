@@ -18,15 +18,22 @@ type Config struct {
 	RateNumber     int
 	AccessTokenTime      int
 	RefrashTokenTime     int
+	MailPort		int
+	MailHost		string
+	MailUser		string
+	MailPass		string
+	MailFrom		string
 }
 
-func LoadConfig() *Config {
+func LoadConfig() *Config { 
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("⚠️ No .env file found, reading from environment")
 	}
 
 	rateInt, _ := strconv.Atoi(os.Getenv("RATE_NUMBER"))
+	mailPort, _ := strconv.Atoi(os.Getenv("MAIL_PORT"))
+
 	accessToken, _ := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	refrashToken, _ := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
 
@@ -40,6 +47,12 @@ func LoadConfig() *Config {
 		AccessTokenTime:       accessToken,
 		RefrashTokenTime:      refrashToken,
 		RateNumber:     rateInt,
+
+		MailPort:     mailPort,
+		MailHost:     os.Getenv("MAIL_HOST"),
+		MailUser:     os.Getenv("MAIL_USER"),
+		MailPass:     os.Getenv("MAIL_PASS"),
+		MailFrom:     os.Getenv("MAIL_FROM"),
 	}
 }
 

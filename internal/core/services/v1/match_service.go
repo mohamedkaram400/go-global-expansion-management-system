@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/v1"
@@ -12,10 +13,12 @@ import (
 type MatchService struct {
 	MatchRepo ports.MatchRepository
 	ProjectService *ProjectService
+	Notifier ports.Notifier
+	ClientService *ClientService
 }
 
-func NewMatchService(repo ports.MatchRepository, projectService *ProjectService) *MatchService {
-	return &MatchService{MatchRepo: repo, ProjectService: projectService}
+func NewMatchService(repo ports.MatchRepository, projectService *ProjectService, notifier ports.Notifier, clientService *ClientService) *MatchService {
+	return &MatchService{MatchRepo: repo, ProjectService: projectService, Notifier: notifier, ClientService: clientService}
 }
 
 func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entities.Match, error) {
@@ -73,6 +76,33 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entitie
 
 		// Append all match result to matchs
 		Matchs = append(Matchs, match)
+
+		// Get client related to current project
+		client, err := svc.ClientService.FindClientByID(ctx, project.ClientId)
+		if err != nil {
+			return nil, err
+		}
+
+		// Send email notification
+		go func() {
+			notif := ports.MatchNotification{
+				MatchID:   match.ID,
+				ProjectID: match.ProjectId,
+				VendorID:  match.VendorId,
+				Score:     match.Score,
+				To:        []string{client.ContactEmail},
+				Subject:   fmt.Sprintf("New Match for Project %d", match.ProjectId),
+				Body:      fmt.Sprintf("Vendor %s matched with score %.1f", v.Name, match.Score),
+			}
+
+			fmt.Println("notif:", notif)
+			
+			if err := svc.Notifier.SendMatchNotification(context.Background(), notif); err != nil {
+				log.Printf("email send error: %v", err)
+			} else {
+				log.Println(">>> email sent OK")
+			}
+		}()
 	}
 
 	return Matchs, nil

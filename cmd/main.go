@@ -7,16 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
-	
+
 	// "github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/notifier"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
 	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
 	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1/auth"
-    authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1/auth"
-	authRoute "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/v1/auth"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1"
+	authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/v1"
+	authRoute "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/routes/v1/auth"
 )
 
 func main() {
@@ -77,9 +78,12 @@ func main() {
 	projectService := services.NewProjectService(projectRepo)
 	projectHandler := http.NewProjectHandler(projectService)
 
+	// Notifier Module
+	notifier := notifier.NewSMTPNotifier(config.MailHost, config.MailPort, config.MailUser, config.MailPass, config.MailFrom)
+
 	// Match Module
 	matchRepo := repositories.NewMatchRepo(mysql)
-	matchService := services.NewMatchService(matchRepo, projectService)
+	matchService := services.NewMatchService(matchRepo, projectService, notifier, clientService)
 	matchHandler := http.NewMatchHandler(matchService)
 
 	// Research Document Module with (Mongo DB)
