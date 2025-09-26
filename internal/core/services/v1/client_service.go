@@ -22,7 +22,7 @@ func (svc *ClientService) GetAllClients(ctx context.Context, skip int, limit int
 	return svc.Repo.GetAllClients(ctx, skip, limit)
 }
  
-func (svc *ClientService) FindClientByID(ctx context.Context, clientID string) (*entities.Client, error) {
+func (svc *ClientService) FindClientByID(ctx context.Context, clientID uint) (*entities.Client, error) {
 	return svc.Repo.FindClientByID(ctx, clientID)
 
 }
