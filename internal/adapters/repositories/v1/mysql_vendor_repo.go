@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"gorm.io/gorm"
@@ -47,6 +48,18 @@ func (r *VendorRepo) InsertVendor(ctx context.Context, vendor *entities.Vendor) 
 	if err := r.DB.WithContext(ctx).Create(vendor).Error; err != nil {
 		return nil, err
 	}
+
+	// Insert vendor_status row
+    status := &entities.VendorStatus{
+        VendorID:       vendor.ID,
+        LastResponseAt: nil,            // no response yet
+        SlaExpired:     false,
+        CheckRunAt:     time.Now(),
+    }
+
+	if err := r.DB.WithContext(ctx).Create(status).Error; err != nil {
+		return nil, err
+	}
 	return vendor, nil
 }
 
@@ -81,3 +94,20 @@ func (r *VendorRepo) DeleteVendorByID(ctx context.Context, vendorID string) (int
 
 	return 1, nil
 }
+
+// Flag expired SLAs
+func (s *VendorRepo) FlagExpiredSLAs(ctx context.Context) error {
+    res := s.DB.Exec(`
+        UPDATE vendor_statuses vs
+		JOIN vendors v
+		ON v.id = vs.vendor_id
+        SET vs.sla_expired = TRUE,
+			vs.check_run_at = NOW()
+
+        WHERE vs.sla_expired = FALSE
+          AND vs.last_response_at IS NOT NULL
+          AND DATE_ADD(vs.last_response_at, INTERVAL v.response_sla_hours HOUR) < NOW()
+    `)
+    return res.Error
+}
+
