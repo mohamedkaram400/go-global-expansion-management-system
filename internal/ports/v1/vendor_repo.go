@@ -12,4 +12,5 @@ type VendorRepository interface {
     GetAllVendors(ctx context.Context, skip int, limit int) ([]entities.Vendor, error)
     UpdateVendorByID(ctx context.Context, vendorID string, updates map[string]interface{}) (*entities.Vendor, error)
     DeleteVendorByID(ctx context.Context, vendorID string) (int, error)
+    FlagExpiredSLAs(ctx context.Context) error
 }

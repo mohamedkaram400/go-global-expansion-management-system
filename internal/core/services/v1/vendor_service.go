@@ -39,6 +39,7 @@ func (svc *VendorService) InsertVendor(ctx context.Context, req *requests.Vendor
 		Rating:				req.Rating,
 		ResponseSlaHours: 	req.ResponseSlaHours,
 	}
+
 	return svc.Repo.InsertVendor(ctx, Vendor)
 }
 
@@ -76,4 +77,8 @@ func (svc *VendorService) UpdateVendorByID(ctx context.Context, VendorID string,
 func (svc *VendorService) DeleteVendorByID(ctx context.Context, VendorID string) (int, error) {
 	return svc.Repo.DeleteVendorByID(ctx, VendorID)
 
+}
+
+func (svc *VendorService) FlagExpiredSLAs(ctx context.Context) error {
+	return svc.Repo.FlagExpiredSLAs(ctx)
 }

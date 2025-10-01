@@ -74,3 +74,7 @@ func (svc *ProjectService) UpdateProjectByID(ctx context.Context, projectID uint
 func (svc *ProjectService) DeleteProjectByID(ctx context.Context, projectID uint) (int, error) {
 	return svc.Repo.DeleteProjectByID(ctx, projectID)
 }
+
+func (svc *ProjectService) FindActiveProjects(ctx context.Context) ([]*entities.Project, error) {
+	return svc.Repo.GetAllActiveProjects(ctx)
+}

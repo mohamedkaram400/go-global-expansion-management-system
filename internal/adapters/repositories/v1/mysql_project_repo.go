@@ -99,3 +99,11 @@ func (r *ProjectRepo) GetProjectCountries(ctx context.Context) (map[uint]string,
 
 	return result, nil
 }
+
+func (s *ProjectRepo) GetAllActiveProjects(ctx context.Context) ([]*entities.Project, error) {
+    var projects []*entities.Project
+    if err := s.DB.Where("status = ?", "active").Find(&projects).Error; err != nil {
+        return nil, err
+    }
+    return projects, nil
+}

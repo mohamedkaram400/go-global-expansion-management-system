@@ -12,7 +12,8 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/notifier"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
 	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1/auth"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/scheduler"
+	services "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
 	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1"
 	authHandler "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1/auth"
@@ -114,10 +115,19 @@ func main() {
 	routes.RegisterResearchDocumentRoutes(v1, researchDocumentHandler)
 	routes.RegisterAnalyticsRoutes(v1, AnalyticsHandler)
 
-	// 9. Test server
+	// 9. Add cron job for re-matching
+	ctx := context.Background()
+	jobManager := scheduler.NewJobManager(ctx)
+
+	jobManager.RegisterJob(&scheduler.RefreshMatchesJob{MatchService: matchService, ProjectService: projectService})
+	jobManager.RegisterJob(&scheduler.FlagExpiredSLAsJob{VendorService: vendorService})
+
+	jobManager.StartScheduler()
+
+	// 10. Test server
 	TestServer(router)
 
-	// 10. Start server
+	// 11. Start server
 	startServer(router, config)
 }
 
