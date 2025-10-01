@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/v1"
@@ -102,6 +103,9 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entitie
 			} else {
 				log.Println(">>> email sent OK")
 			}
+		    // Add delay
+	        time.Sleep(1 * time.Second)
+
 		}()
 	}
 

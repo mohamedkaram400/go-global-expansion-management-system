@@ -35,7 +35,7 @@ func (svc *UserAuthService) Login(ctx context.Context, req *requests.UserLoginRe
 		return nil, "", "", errors.New("invalid password")
 	}
 
-	accessToken, refreshToken, err := pkg.IssueTokens("client_id", user.ID, accessHours, refreshDays)
+	accessToken, refreshToken, err := pkg.IssueTokens("user_id", user.ID, accessHours, refreshDays)
 	if err != nil {
 		return nil, "", "", errors.New("failed to generate access and refresh token")
 	}
