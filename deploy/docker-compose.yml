@@ -1,0 +1,98 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: expansion-app
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mysql
+      - redis
+      - mongodb
+    env_file:
+      - ../.env.docker
+    environment:
+      APP_NAME: App
+      DB_HOST: expansion-mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - expansion
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: expansion-nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - expansion
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mysql:
+    image: mysql:5.7
+    container_name: expansion-mysql
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: >
+      --server-id=1
+      --log-bin=mysql-bin
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - expansion
+
+  redis:
+    image: redis:alpine
+    container_name: expansion-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - expansion
+
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    container_name: expansion-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - expansion
+    healthcheck:
+      test: ["CMD", "mongosh", "--username", "user", "--password", "pass", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  expansion:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  mongo_data:

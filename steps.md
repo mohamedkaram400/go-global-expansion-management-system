@@ -49,6 +49,8 @@ Business Context:
 Expanders360 helps founders run expansion projects in new countries. Each project requires structured data (clients, vendors, projects) stored in MySQL, and unstructured research documents (e.g., market insights, contracts, reports) stored in MongoDB. Your mission is to design a backend that connects these worlds and powers the matching of projects with vendors.
 
 🛠️ Your Tasks
+
+<!-- Done -->
 Auth & Roles
 
 Implement JWT authentication in NestJS
@@ -70,6 +72,7 @@ vendors (id, name, countries_supported[], services_offered[], rating, response_s
 matches (id, project_id, vendor_id, score, created_at)
 
 
+<!-- Done -->
 Research Documents (MongoDB)
 
 Store market reports and project research files in MongoDB (schema-free).
@@ -84,6 +87,7 @@ Query/search documents by tag, text, or project.
 
 Project-Vendor Matching
 
+<!-- Done -->
 Build an endpoint /projects/:id/matches/rebuild that generates vendor matches using MySQL queries.
 
 Matching rules:
@@ -97,6 +101,7 @@ Score formula: services_overlap * 2 + rating + SLA_weight
 Store matches in DB with idempotent upsert logic.
 
 
+<!-- Done -->
 Analytics & Cross-DB Query
 
 Create an endpoint /analytics/top-vendors that returns:
@@ -110,7 +115,7 @@ This requires joining relational and non-relational sources in your service laye
 
 
 
-<!-- In progress -->
+<!-- Done -->
 Notifications & Scheduling
 
 When a new match is generated → send email notification (SMTP or mock service).
@@ -122,8 +127,7 @@ Refreshes matches daily for “active” projects
 Flags vendors with expired SLAs
 
 
-
-
+<!-- In progress -->
 Deployment
 
 Dockerized app with MySQL + MongoDB containers
@@ -131,6 +135,8 @@ Dockerized app with MySQL + MongoDB containers
 Deploy to any free cloud (Render, Railway, AWS free tier, etc.)
 
 Provide a working .env.example and setup instructions
+
+
 
 🧰 Tech Stack
 NestJS (TypeScript)
