@@ -23,6 +23,7 @@ WORKDIR /app
 
 # Copy binary from builder
 COPY --from=builder /build/main .
+COPY ../.env.docker .env
 
 # Expose app port (your app listens on 9000)
 EXPOSE 9000

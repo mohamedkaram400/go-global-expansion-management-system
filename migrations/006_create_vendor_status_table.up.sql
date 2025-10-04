@@ -1,4 +1,4 @@
-CREATE TABLE vendor_statuses (
+CREATE TABLE vendor_statues (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     vendor_id BIGINT NOT NULL,
     last_response_at DATETIME,

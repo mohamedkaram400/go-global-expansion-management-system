@@ -7,11 +7,14 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      - mysql
-      - redis
-      - mongodb
+      redis:
+        condition: service_started
+      mongodb:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     env_file:
-      - ../.env.docker
+      - .env
     environment:
       APP_NAME: App
       DB_HOST: expansion-mysql
@@ -59,6 +62,11 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - expansion
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pqazwsx"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   redis:
     image: redis:alpine

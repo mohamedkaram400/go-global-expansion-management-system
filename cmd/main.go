@@ -8,11 +8,12 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/config"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 
-	// "github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/db/seeders"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/notifier"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
 	authRepo "github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/scheduler"
+	entities "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	services "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
 	authService "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/http/v1"
@@ -46,7 +47,22 @@ func main() {
 
 	defer mongo.Disconnect(context.Background())
 
-	// seeders.SeedAdminUser(mysql)  // Run only once
+
+	// ✅ Run AutoMigrate to create tables if not exist
+	if err := mysql.AutoMigrate(
+		&entities.Project{},
+		&entities.User{},
+		&entities.Client{},
+		&entities.Vendor{},
+		&entities.Match{},
+		&entities.VendorStatus{},
+	); err != nil {
+		log.Fatalf("❌ Failed to migrate database: %v", err)
+	}
+
+	log.Println("✅ Database migrated successfully")
+
+	seeders.SeedAdminUser(mysql)  // Run only once
 
 	// 5. Service, Repo and Handlers
 	// User Auth Module
@@ -143,3 +159,4 @@ func startServer(router *gin.Engine, config *config.Config) {
 	}
 	log.Println("🚀 App started on port", config.Port)
 }
+

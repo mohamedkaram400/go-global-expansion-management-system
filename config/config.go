@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -37,8 +38,21 @@ func LoadConfig() *Config {
 	accessToken, _ := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	refrashToken, _ := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
 
+	// Check if mysql DNS found load it if not build it 
+	mysqlURI := os.Getenv("MYSQL_URI")
+
+	if mysqlURI == "" {
+		mysqlURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+			os.Getenv("DB_USERNAME"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_DATABASE"),
+		)
+	}
+
 	return &Config{
-		MySQLURI:       os.Getenv("MYSQL_URI"),
+		MySQLURI:       mysqlURI,
 		MongoURI:       os.Getenv("MONGO_URI"),
 		DBName:         os.Getenv("DB_NAME"),
 		CollectionName: os.Getenv("COLLECTION_NAME"),

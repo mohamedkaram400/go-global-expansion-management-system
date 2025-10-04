@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"log"
+	"errors"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/pkg"
@@ -11,11 +12,11 @@ import (
 func SeedAdminUser(db *gorm.DB) {
 	// check if admin already exists
 	var admin entities.User
-	result := db.Where("role = ?", "Admin").First(&admin)
+	result := db.Where("role = ?", "Admin").Take(&admin)
 
-	if result.Error == gorm.ErrRecordNotFound {
-		// create admin user
-		hashedPassword, _ := pkg.HashPassword("Admin@123") 
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		hashedPassword, _ := pkg.HashPassword("Admin@123")
+
 		admin = entities.User{
 			Name:     "Admin",
 			Email:    "mohamed@admin.com",
@@ -24,10 +25,16 @@ func SeedAdminUser(db *gorm.DB) {
 		}
 
 		if err := db.Create(&admin).Error; err != nil {
-			log.Fatalf("Failed to seed admin user: %v", err)
+			log.Fatalf("❌ Failed to seed admin user: %v", err)
 		}
+
 		log.Println("✅ Admin user seeded successfully")
-	} else {
-		log.Println("⚠️ Admin user already exists, skipping seeding")
+		return
 	}
+
+	if result.Error != nil {
+		log.Fatalf("❌ Failed to check admin user: %v", result.Error)
+	}
+
+	log.Println("⚠️ Admin user already exists, skipping seeding")
 }

@@ -1,1 +1,1 @@
-DROP TABLE vendor_statuses;
+DROP TABLE vendor_statues;
