@@ -1,8 +1,15 @@
 package responses
 
-import "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
+import (
+	"time"
+)
 
 type MatchResponse struct {
-	ID              uint            `json:"id"`
-	MatchingVenders *entities.Match `json:""`
+	ID         uint      `json:"id"`
+	ProjectID  uint      `json:"project_id"`
+	VendorID   uint      `json:"vendor_id"`
+	VendorName string    `json:"vendor_name"`
+	Score      float64   `json:"score"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }

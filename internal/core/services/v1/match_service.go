@@ -9,6 +9,7 @@ import (
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/ports/v1"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/responses/v1"
 )
 
 type MatchService struct {
@@ -22,77 +23,95 @@ func NewMatchService(repo ports.MatchRepository, projectService *ProjectService,
 	return &MatchService{MatchRepo: repo, ProjectService: projectService, Notifier: notifier, ClientService: clientService}
 }
 
-func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entities.Match, error) {
+func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]responses.MatchResponse, error) {
 
-	// Load project from DB
+	// 1. Load project from DB
 	project, err := svc.ProjectService.FindProjectByID(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}
  
-	fmt.Println(project)
+	// fmt.Println(project)
 
-	// Parse JSON []byte → []string
+	// 2. Parse JSON []byte → []string
 	var projectServices []string
 	if err := json.Unmarshal(project.ServicesNeeded, &projectServices); err != nil {
 		return nil, fmt.Errorf("failed to parse services_needed: %w", err)
 	}
 
 
-	// Get all vendors that apply rules
+	// 3. Get all vendors that apply rules
 	vendors, err := svc.MatchRepo.GetVendorsForProject(ctx, project)
 	if err != nil {
 		return nil, err
 	}
  
-	// Loop over vendors and Calculate Score
-	Matchs := make([]entities.Match, 0, len(vendors))
+	// fmt.Println(project, vendors)
 
-	// Count number of service overlap in project and offered by vendor
+	// 4. Init object for response with length of vendors matches
+	matchResponses := make([]responses.MatchResponse, 0, len(vendors))
+
+	// 5. Loop over vendors Count number of service overlap in project and offered by vendor
 	for _, v := range vendors {
+
+		// 6. Parse vendor services []byte → []string
 		var vendorServices []string
 		if err := json.Unmarshal(v.ServicesOffered, &vendorServices); err != nil {
 			return nil, fmt.Errorf("failed to parse vendor services_offered: %w", err)
 		}
 
-		// Count how many service overlap with project and vendor
+		// 7. Count how many service overlap with project and vendor
 		overlap := countOverlap(projectServices, vendorServices)
+
+		// fmt.Println("overlap:", overlap, "projectServices: ", projectServices, "vendorServices: ", vendorServices)
 
 		if overlap == 0 {
 			continue
 		}
 
-		// Calculate Score formula: services_overlap * 2 + rating + SLA_weight
+		// 8. Calculate Score formula: services_overlap * 2 + rating + SLA_weight
 		score := float64(overlap*2) + v.Rating + float64(v.ResponseSlaHours)
 		match := entities.Match{
-			ProjectId: project.ID,
-			VendorId:  v.ID,
+			ProjectID: project.ID,
+			VendorID:  v.ID,
 			Score:     score,
 		}
 
-		// Save match result with socre in matches table 
+		// 9. Save match result with socre in matches table 
 		if err := svc.MatchRepo.UpsertMatch(ctx, &match); err != nil {
 			return nil, err
 		}
 
-		// Append all match result to matchs
-		Matchs = append(Matchs, match)
 
-		// Get client related to current project
-		client, err := svc.ClientService.FindClientByID(ctx, project.ClientId)
+		// 10. Build clean response
+		resp := responses.MatchResponse{
+			ID:         match.ID,
+			ProjectID:  match.ProjectID,
+			VendorID:   match.VendorID,
+			VendorName: v.Name,
+			Score:      match.Score,
+			CreatedAt:  match.CreatedAt,
+			UpdatedAt:  match.UpdatedAt,
+		}
+
+		// 11. Append all match result to matchs
+		matchResponses = append(matchResponses, resp)
+
+		// 12. Get client related to current project
+		client, err := svc.ClientService.FindClientByID(ctx, project.ClientID)
 		if err != nil {
 			return nil, err
 		}
 
-		// Send email notification
+		// 13. Send email notification
 		go func() {
 			notif := ports.MatchNotification{
 				MatchID:   match.ID,
-				ProjectID: match.ProjectId,
-				VendorID:  match.VendorId,
+				ProjectID: match.ProjectID,
+				VendorID:  match.VendorID,
 				Score:     match.Score,
 				To:        []string{client.ContactEmail},
-				Subject:   fmt.Sprintf("New Match for Project %d", match.ProjectId),
+				Subject:   fmt.Sprintf("New Match for Project %d", match.ProjectID),
 				Body:      fmt.Sprintf("Vendor %s matched with score %.1f", v.Name, match.Score),
 			}
 
@@ -109,7 +128,9 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]entitie
 		}()
 	}
 
-	return Matchs, nil
+	fmt.Println("Matchs: ", matchResponses)
+
+	return matchResponses, nil
 }
 
 func countOverlap(projectServices, vendorServices []string) int {
@@ -127,3 +148,4 @@ func countOverlap(projectServices, vendorServices []string) int {
 	}
 	return count
 }
+
