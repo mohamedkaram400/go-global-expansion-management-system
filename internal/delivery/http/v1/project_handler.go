@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -65,20 +64,23 @@ func (h *ProjectHandler) Show(c *gin.Context) {
 }
 
 func (h *ProjectHandler) Create(c *gin.Context) {
-    var req requests.ProjectRequest
+	var req requests.ProjectRequest
 
-    fmt.Printf("📥 Handler received request: %+v\n", req) // debug
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": requests.FormatValidationError(err)})
+		return
+	}
 
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err := req.Validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": requests.FormatValidationError(err)})
+		return
+	}
 
-    newProject, err := h.Service.InsertProject(c, &req)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	newProject, err := h.Service.InsertProject(c, &req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Project Created Successfully",
@@ -86,7 +88,7 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, response)
-} 
+}
 
 func (h *ProjectHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
@@ -109,7 +111,7 @@ func (h *ProjectHandler) Update(c *gin.Context) {
     services, _ := json.Marshal(req.ServicesNeeded)
 
 	updates := &entities.Project{
-		ClientId:				req.ClientId,
+		ClientID:				req.ClientId, 
 		Country:				req.Country,
 		Budget:					req.Budget,
 		ServicesNeeded: 		services,

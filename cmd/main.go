@@ -49,16 +49,18 @@ func main() {
 
 
 	// ✅ Run AutoMigrate to create tables if not exist
+	mysql.Exec("SET FOREIGN_KEY_CHECKS = 0;")
 	if err := mysql.AutoMigrate(
-		&entities.Project{},
 		&entities.User{},
 		&entities.Client{},
 		&entities.Vendor{},
-		&entities.Match{},
 		&entities.VendorStatus{},
+		&entities.Project{},
+		&entities.Match{},
 	); err != nil {
 		log.Fatalf("❌ Failed to migrate database: %v", err)
 	}
+	mysql.Exec("SET FOREIGN_KEY_CHECKS = 1;")
 
 	log.Println("✅ Database migrated successfully")
 
@@ -138,7 +140,7 @@ func main() {
 	jobManager.RegisterJob(&scheduler.RefreshMatchesJob{MatchService: matchService, ProjectService: projectService})
 	jobManager.RegisterJob(&scheduler.FlagExpiredSLAsJob{VendorService: vendorService})
 
-	jobManager.StartScheduler()
+	// jobManager.StartScheduler()
 
 	// 10. Test server
 	TestServer(router)

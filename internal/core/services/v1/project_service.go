@@ -35,7 +35,7 @@ func (svc *ProjectService) InsertProject(ctx context.Context, req *requests.Proj
     }
 
 	project := &entities.Project{
-		ClientId:				req.ClientId,
+		ClientID:				req.ClientId,
 		Country:				req.Country,
 		Budget:					req.Budget,
 		ServicesNeeded: 		services,

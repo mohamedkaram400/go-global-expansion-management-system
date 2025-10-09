@@ -23,7 +23,7 @@ func FormatProject(project *entities.Project) ProjectResponse {
 
     return ProjectResponse{
         ID:            project.ID,
-        ClientId:      project.ClientId,
+        ClientId:      project.ClientID,
         ServicesNeeded: services,
         Country:       project.Country,
         Budget:        project.Budget,

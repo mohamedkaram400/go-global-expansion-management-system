@@ -1,7 +1,7 @@
 CREATE TABLE matches (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    project_id BIGINT NOT NULL,
-    vendor_id BIGINT NOT NULL,
+    project_id INT NOT NULL,
+    vendor_id INT NOT NULL,
     score FLOAT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
