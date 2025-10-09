@@ -1,0 +1,997 @@
+{
+	"info": {
+		"_postman_id": "74b70b71-4008-4d4e-9b16-7614353c9dab",
+		"name": "Go-Expansion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33747993"
+	},
+	"item": [
+		{
+			"name": "ClientAuth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_name\": \"Algoriza\",\n    \"contact_email\": \"contect@algoriza.com\",\n    \"password\": \"Pa$$0rds\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_name\": \"Doham\",\n    \"password\": \"Pa$$0rds\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImV4cCI6MTc1NzQ2NDcwMSwidHlwZSI6ImFjY2VzcyJ9.xui7GML6x7bmlYz41QLvZHfp6sL8z3HGznSlHa5qbtY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserAuth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ahmed@gmail.com\",\n    \"password\": \"Pa$$0rds\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTc0NjQ1MjEsInR5cGUiOiJhY2Nlc3MiLCJ1c2VyX2lkIjo2fQ.k2sseNbjpZ4nBd-u6Ys4e9iZXIcR46f5WqXQ5JCCEWs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "CreateClient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImV4cCI6MTc1NzQ2NDcwMSwidHlwZSI6ImFjY2VzcyJ9.xui7GML6x7bmlYz41QLvZHfp6sL8z3HGznSlHa5qbtY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_name\": \"Googel\",\n    \"contact_email\": \"googel@contect3.com\",\n    \"password\": \"Pa$$0rds\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/create-client",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"create-client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllClients",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImV4cCI6MTc1NzQ2NDcwMSwidHlwZSI6ImFjY2VzcyJ9.xui7GML6x7bmlYz41QLvZHfp6sL8z3HGznSlHa5qbtY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/client/all-clients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"all-clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShowClient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU2OTkxODg2LCJ0eXBlIjoiYWNjZXNzIn0.f0B3fj_kqJxn-fYurg9h8BfV1GFZ9Sogsxi5sWiak94",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/client/show-client/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"show-client",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_name\": \"Googel update\",\n    \"contact_email\": \"googel@contect.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/update-client/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"update-client",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClient Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjIsImNvbXBhbnlfbmFtZSI6Ikdvb2dlbCIsImV4cCI6MTc1Njc2MDYxNywidHlwZSI6ImFjY2VzcyJ9.1MJfzDm9UxuR9IKg3Xkfbn7qhtzLS9VP390APrzimjc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/client/delete-client/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"client",
+								"delete-client",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "CreateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ahmed\",\n    \"email\": \"ahmed@gmail.com\",\n    \"role\": \"Support\",\n    \"password\": \"Pa$$0rds\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/create-user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"create-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/all-users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShowUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/show-user/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"show-user",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ali2\",\n    \"email\": \"ali@gmail2.com\",\n    \"role\": \"Support\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/update-user/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"update-user",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MTA3OTE5LCJ0eXBlIjoiYWNjZXNzIn0.zG44hqXJfPE1Xkti92aA_SwXEVuqd-KTtq_gM8LRovs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/delete-user/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"delete-user",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vendor",
+			"item": [
+				{
+					"name": "CreateVendor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjEsImV4cCI6MTc1OTMzODE1MywidHlwZSI6ImFjY2VzcyJ9.rrimhARL2pMW3AXOq4RxWgZT0fnc55RMJuLJCCisfP8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Airon Tech\",\n    \"countries_supported\": [\"UAD\"],\n    \"services_offered\": [\"legal\", \"hiring\"],\n    \"rating\": 3.5,\n    \"response_sla_hours\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/vendor/create-vendor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vendor",
+								"create-vendor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllVendors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImV4cCI6MTc1NzQ2NTA1MCwidHlwZSI6ImFjY2VzcyJ9.XR7rjrZ39HAZ-y5hVDeuUZAxOHx_0Amub9Jui0PqUWA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/vendor/all-vendors",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vendor",
+								"all-vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShowVendor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImV4cCI6MTc1NzQ2NTA1MCwidHlwZSI6ImFjY2VzcyJ9.XR7rjrZ39HAZ-y5hVDeuUZAxOHx_0Amub9Jui0PqUWA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/vendor/show-vendor/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vendor",
+								"show-vendor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateVendor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU3MDAzMzM0LCJ0eXBlIjoiYWNjZXNzIn0.iKvgK448F8EH0zqp4ePZLJ3rLB_rdheri8eks-2djjY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"AB Tech\",\n    \"countries_supported\": [\"UAD\", \"US\", \"KSA\"],\n    \"services_offered\": [\"legal\"],\n    \"rating\": 3.4,\n    \"response_sla_hours\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/vendor/update-vendor/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vendor",
+								"update-vendor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteVendor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjYsImNvbXBhbnlfbmFtZSI6IkRvaGFtIiwiZXhwIjoxNzU2OTk5ODY4LCJ0eXBlIjoiYWNjZXNzIn0.mi0Jzy-c-64PuH6jzTDuNDSpsDwADfrLKZKDklu_e3w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/vendor/delete-vendor/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vendor",
+								"delete-vendor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "CreateProject",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllProjects",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "ShowProject",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateVendor",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteVendor",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Match",
+			"item": [
+				{
+					"name": "BuildMatch",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ResearchDocument",
+			"item": [
+				{
+					"name": "UploadDocument",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/document/research/3/upload",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"document",
+								"research",
+								"3",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchOnDocuments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/document/search/{keyword}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"document",
+								"search",
+								"{keyword}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "top-vendors",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZWM2N2Y1Ny0wZTYzLTQzOTctYTUyZi03NmQxMjZhZjRhNzEiLCJqdGkiOiIxMWVjMjg1MWU3NTQ0NTcwM2VlYjUyMGI2ZDM2OTAwODRlMTVhZWMzOTkwNTgzOTNlMGUwNmE5MmViNGRmMjVkM2ExMWIyZWU0NDQ1YjRmNiIsImlhdCI6MTc1NTc3MjU1Ni44MjgxMTgsIm5iZiI6MTc1NTc3MjU1Ni44MjgxMjEsImV4cCI6MTc4NzMwODU1Ni44MTQ3MjQsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.tcqSUGgjQnYxsBPkct85NtUc3YyTYrUrBECttnjY6eSilQStH9BhdqiyFW4BEE4gr9u6joE6Nr3F0l_bQ3e8i5Vy_4DfoxjidnkYO3UiMfO3o3DEzorlabuRRLGEn3cNa7xqkrdotfR7scYsfu0PLt-6dum86HnDNBNPfOgYMaNK5u8aHtCbPtTHPqDKdtnmdYIg-nBeL5hx1gkmRDuNeBYc_v2eqOqr_9RXhysFpnOqlW53N21ViiTc_ELLZehQfUv3dMJGlY4mLtH7tXPVv-pbW8L9QZoRpWuvrZG7PeFXux-dBLe4_kmxkdRtqVD46BfGQXEvb-VItIIt-ZjODyN83PV7yX_-pkrxwkOVl91W6htkYv3RHWgS8SL_7PZZV0vbRhT0Qjffy47b2vRxCJf2fU7WkctF6eVajtSEqhWMPZHMSwRItl3LuvBDqhXYhIjksLxfcV5BAcBHhi_ThlqvuYx_cDAhMF3SweaJwHV_SlHfAllmeUz_cl43vHDhRghKwYiSJ-wvvkv68XwpiGcouRx6SEUz7PS67Jnu6j_yb84N1UVVJLqLaDDEKjpq1-mHe146nX2QyniizVSYRQxQFu26-O5UUUPh1PG3TxddNLqgfs1zGygzig3puJ-GZ7elUKVeAu0BKKzNm1XuaqcvMFeqQSsF2KJY13MN-3U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ali Ahmed 44\",\n    \"department\": \"Backend-2\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ping",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ping"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "ali ahmed",
+							"disabled": true
+						},
+						{
+							"key": "department",
+							"value": "backend",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:9000",
+			"type": "default"
+		}
+	]
+}
