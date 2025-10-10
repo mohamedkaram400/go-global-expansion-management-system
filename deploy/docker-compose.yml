@@ -36,7 +36,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - /home/mohamed-karam/Projects/go-expansion/deploy/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
     networks:
