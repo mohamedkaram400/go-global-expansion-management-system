@@ -29,6 +29,7 @@ func main() {
 
 	// 2. Connect to MySQL
 	mysql, err := conn.ConnectMySQL(config.MySQLURI)
+	sqlDB, _ := mysql.DB()
 	if err != nil {
 		log.Fatal("❌ Failed to connect MySQL:", err)
 	}
@@ -45,7 +46,10 @@ func main() {
 		log.Fatal("❌ Failed to connect Redis:", err)
 	}
 
+	// Close the services connection by the of method
 	defer mongo.Disconnect(context.Background())
+	defer conn.RedisClient.Close()
+	defer sqlDB.Close()
 
 
 	// ✅ Run AutoMigrate to create tables if not exist
