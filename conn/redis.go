@@ -10,18 +10,19 @@ import (
 
 var RedisClient *redis.Client
 
-func ConnectRedis(redisHost string) error {
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr: redisHost,
-	})
+func ConnectRedis(redisHost string) (*redis.Client, error) {
+    RedisClient = redis.NewClient(&redis.Options{
+        Addr: redisHost,
+    })
 
-	// Test connection
-	ctx := context.Background()
-	_, err := RedisClient.Ping(ctx).Result()
-	if err != nil {
-		return fmt.Errorf("failed to connect to Redis: %v", err)
-	}
+    // Test connection
+    ctx := context.Background()
+    _, err := RedisClient.Ping(ctx).Result()
 
-	log.Println("✅ Connected to Redis successfully")
-	return nil
+    if err != nil {
+        return nil, fmt.Errorf("failed to connect to Redis: %v", err)
+    }
+
+    log.Println("✅ Connected to Redis successfully")
+    return RedisClient, nil
 }

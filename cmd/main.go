@@ -42,13 +42,14 @@ func main() {
 	researchDocumentsollection := mongo.Database(config.DBName).Collection(config.CollectionName)
 
 	// 4. Connect to Redis
-	if err := conn.ConnectRedis(config.RedisHost); err != nil {
+	redisClient, err := conn.ConnectRedis(config.RedisHost)
+	if err != nil {
 		log.Fatal("❌ Failed to connect Redis:", err)
 	}
 
 	// Close the services connection by the of method
 	defer mongo.Disconnect(context.Background())
-	defer conn.RedisClient.Close()
+	defer redisClient.Close()
 	defer sqlDB.Close()
 
 
@@ -69,6 +70,7 @@ func main() {
 	log.Println("✅ Database migrated successfully")
 
 	seeders.SeedAdminUser(mysql)  // Run only once
+
 
 	// 5. Service, Repo and Handlers
 	// User Auth Module
@@ -118,10 +120,12 @@ func main() {
 	analyticsService := services.NewAnalyticsService(matchRepo, researchDocumentRepo, projectRepo)
 	AnalyticsHandler := http.NewAnalyticsHandler(analyticsService)
 
+
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.Use(gin.Logger(), gin.Recovery())
+
 
 	// 7. Versioned API group
 	v1 := router.Group("/api/v1")
@@ -136,6 +140,7 @@ func main() {
 	routes.RegisterMatchRoutes(v1, matchHandler)
 	routes.RegisterResearchDocumentRoutes(v1, researchDocumentHandler)
 	routes.RegisterAnalyticsRoutes(v1, AnalyticsHandler)
+
 
 	// 9. Add cron job for re-matching
 	ctx := context.Background()

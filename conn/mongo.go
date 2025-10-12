@@ -1,8 +1,8 @@
-
 package conn
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -20,7 +20,7 @@ func ConnectMongo(uri string) (*mongo.Client, error) {
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to Mongodb: %v", err)
 	}
 
 	// Ping the database to test connection
