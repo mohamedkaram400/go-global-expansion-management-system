@@ -13,7 +13,7 @@ type ProjectResponse struct {
 	ServicesNeeded  []string  `json:"service_needed"`
 	Country    		string    `json:"country"`
 	Budget          float64   `json:"budget"`
-    Status          entities.ProjectStatus `json:"status"`
+    Status          string    `json:"status"`
 }
 
 

@@ -2,7 +2,6 @@ package requests
 
 import (
 	"github.com/go-playground/validator/v10"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 )
 
 var validate = validator.New()
@@ -12,7 +11,7 @@ type ProjectRequest struct {
 	ServicesNeeded  []string                `json:"service_needed"   validate:"required,min=1"`
 	Country         string                  `json:"country"          validate:"required"`
 	Budget          float64                 `json:"budget"           validate:"required,gte=1"`
-	Status          entities.ProjectStatus `json:"status"           validate:"omitempty,oneof=active completed cancelled"`
+	Status          string                  `json:"status"           validate:"omitempty,oneof=active completed cancelled"`
 }
 
 // Validate performs struct validation

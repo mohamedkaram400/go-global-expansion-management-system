@@ -34,38 +34,52 @@ func main() {
 		log.Fatal("❌ Failed to connect MySQL:", err)
 	}
 
-	// 3. Connect to MongoDB
+	// 3. Connect to SQLite (for testing)
+	sqlite, err := conn.ConnectSQLite()
+	if err != nil {
+		log.Fatal("❌ Failed to connect SQLite:", err)
+	}
+
+	// 4. Connect to MongoDB
 	mongo, err := conn.ConnectMongo(config.MongoURI)
 	if err != nil {
 		log.Fatal("❌ Failed to connect Mongo:", err)
 	}
 	researchDocumentsollection := mongo.Database(config.DBName).Collection(config.CollectionName)
 
-	// 4. Connect to Redis
+	// 5. Connect to Redis
 	redisClient, err := conn.ConnectRedis(config.RedisHost)
 	if err != nil {
 		log.Fatal("❌ Failed to connect Redis:", err)
 	}
 
-	// Close the services connection by the of method
+	// 7. Defer closing connections
 	defer mongo.Disconnect(context.Background())
 	defer redisClient.Close()
 	defer sqlDB.Close()
 
 
-	// ✅ Run AutoMigrate to create tables if not exist
-	mysql.Exec("SET FOREIGN_KEY_CHECKS = 0;")
-	if err := mysql.AutoMigrate(
+	models := []interface{}{
 		&entities.User{},
 		&entities.Client{},
 		&entities.Vendor{},
 		&entities.VendorStatus{},
 		&entities.Project{},
 		&entities.Match{},
-	); err != nil {
-		log.Fatalf("❌ Failed to migrate database: %v", err)
+	}
+
+	// ✅ Run AutoMigrate for MySQL
+	mysql.Exec("SET FOREIGN_KEY_CHECKS = 0;")
+	if err := mysql.AutoMigrate(models...); err != nil {
+		log.Fatalf("❌ Failed to migrate MySQL: %v", err)
 	}
 	mysql.Exec("SET FOREIGN_KEY_CHECKS = 1;")
+
+	// ✅ Run AutoMigrate for SQLite (test DB)
+	if err := sqlite.AutoMigrate(models...); err != nil {
+		log.Fatalf("❌ Failed to migrate SQLite: %v", err)
+	}
+
 
 	log.Println("✅ Database migrated successfully")
 

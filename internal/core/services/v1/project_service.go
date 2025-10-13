@@ -29,17 +29,13 @@ func (svc *ProjectService) FindProjectByID(ctx context.Context, projectID uint) 
 
 func (svc *ProjectService) InsertProject(ctx context.Context, req *requests.ProjectRequest) (*entities.Project, error) {
 	services, _ := json.Marshal(req.ServicesNeeded)
-    status := req.Status
-    if status == "" { 
-        status = entities.ProjectActive
-    }
 
 	project := &entities.Project{
 		ClientID:				req.ClientId,
 		Country:				req.Country,
 		Budget:					req.Budget,
 		ServicesNeeded: 		services,
-		Status: 				status,
+		Status: 				req.Status,
 
 	}
 	return svc.Repo.InsertProject(ctx, project)
