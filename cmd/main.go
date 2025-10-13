@@ -35,10 +35,10 @@ func main() {
 	}
 
 	// 3. Connect to SQLite (for testing)
-	sqlite, err := conn.ConnectSQLite()
-	if err != nil {
-		log.Fatal("❌ Failed to connect SQLite:", err)
-	}
+	// sqlite, err := conn.ConnectSQLite()
+	// if err != nil {
+	// 	log.Fatal("❌ Failed to connect SQLite:", err)
+	// }
 
 	// 4. Connect to MongoDB
 	mongo, err := conn.ConnectMongo(config.MongoURI)
@@ -76,9 +76,9 @@ func main() {
 	mysql.Exec("SET FOREIGN_KEY_CHECKS = 1;")
 
 	// ✅ Run AutoMigrate for SQLite (test DB)
-	if err := sqlite.AutoMigrate(models...); err != nil {
-		log.Fatalf("❌ Failed to migrate SQLite: %v", err)
-	}
+	// if err := sqlite.AutoMigrate(models...); err != nil {
+	// 	log.Fatalf("❌ Failed to migrate SQLite: %v", err)
+	// }
 
 
 	log.Println("✅ Database migrated successfully")
