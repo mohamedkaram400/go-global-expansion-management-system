@@ -60,7 +60,7 @@ func (r *ClientRepo) InsertClient(ctx context.Context, client *entities.Client) 
 	return client, nil
 }
 
-func (r *ClientRepo) UpdateClientByID(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error) {
+func (r *ClientRepo) UpdateClientByID(ctx context.Context, clientID int, updates map[string]interface{}) (*entities.Client, error) {
 
 	client := &entities.Client{}
 
@@ -82,7 +82,7 @@ func (r *ClientRepo) UpdateClientByID(ctx context.Context, clientID string, upda
     return client, nil
 }
 
-func (r *ClientRepo) DeleteClientByID(ctx context.Context, clientID string) (int, error) {
+func (r *ClientRepo) DeleteClientByID(ctx context.Context, clientID int) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", clientID).
 		Delete(&entities.Client{}).Error; err != nil {

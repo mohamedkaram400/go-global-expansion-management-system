@@ -47,7 +47,7 @@ func (svc *ClientService) InsertClient(ctx context.Context, req *requests.Client
 	return svc.Repo.InsertClient(ctx, client)
 } 
 
-func (svc *ClientService) UpdateClientByID(ctx context.Context, clientID string, newClient *entities.Client) (*entities.Client, error) {
+func (svc *ClientService) UpdateClientByID(ctx context.Context, clientID int, newClient *entities.Client) (*entities.Client, error) {
 	updates := map[string]interface{}{}
 
 	if newClient.ContactEmail != "" {
@@ -70,7 +70,7 @@ func (svc *ClientService) UpdateClientByID(ctx context.Context, clientID string,
 	return svc.Repo.UpdateClientByID(ctx, clientID, updates)
 }
 
-func (svc *ClientService) DeleteClientByID(ctx context.Context, clientID string) (int, error) {
+func (svc *ClientService) DeleteClientByID(ctx context.Context, clientID int) (int, error) {
 	return svc.Repo.DeleteClientByID(ctx, clientID)
 
 }

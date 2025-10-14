@@ -97,7 +97,8 @@ func (h *ClientHandler) Create(c *gin.Context) {
 } 
 
 func (h *ClientHandler) Update(c *gin.Context) {
-    clientID := c.Param("id")
+    idStr := c.Param("id")
+	clientID, _ := strconv.Atoi(idStr)
 	
     var req requests.ClientRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -129,7 +130,8 @@ func (h *ClientHandler) Update(c *gin.Context) {
 }
 
 func (h *ClientHandler) Destroy(c *gin.Context) {
-    clientID := c.Param("id")
+    idStr := c.Param("id")
+	clientID, _ := strconv.Atoi(idStr)
 
     _, err := h.Service.DeleteClientByID(c.Request.Context(), clientID)
     if err != nil {

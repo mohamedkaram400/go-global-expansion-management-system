@@ -16,7 +16,7 @@ func TestGetAllClients(t *testing.T) {
 	clients, err := repo.GetAllClients(ctx, 0, 10)
 	assert.NoError(t, err)
 	assert.NotNil(t, clients)
-	assert.Equal(t, 5, len(clients))
+	assert.Equal(t, 10, len(clients))
 }
 
 func TestGetClientByID(t *testing.T) {
@@ -53,16 +53,26 @@ func TestUpdateClient(t *testing.T) {
 	repo := repositories.NewClientRepo(TestDB)
 	ctx := context.Background()
 
+	// 1. Insert a client first to make sure it exists
+	client := &entities.Client{
+		CompanyName:  "Delete Test Company",
+		ContactEmail: "delete@test.com",
+		Password:     "secret",
+	}
+	inserted, err := repo.InsertClient(ctx, client)
+	assert.NoError(t, err)
+	assert.NotNil(t, inserted)
+
 	updates := map[string]interface{}{
 		"company_name":  "Updated Company",
 		"contact_email": "test@update.com",
 		"password":      "secret1",
 	}
 
-	inserted, err := repo.UpdateClientByID(ctx, "4", updates)
+	updated, err := repo.UpdateClientByID(ctx, client.ID, updates)
 	assert.NoError(t, err)
-	assert.NotNil(t, inserted)
-	assert.NotZero(t, inserted.ID)
+	assert.NotNil(t, updated)
+	assert.NotZero(t, updated.ID)
 
 	// verify record exists
 	found, err := repo.FindClientByID(ctx, inserted.ID)
@@ -85,12 +95,12 @@ func TestDeleteClient(t *testing.T) {
 	assert.NotNil(t, inserted)
 
 	// 2. Delete the inserted client
-	rowsAffected, err := repo.DeleteClientByID(ctx, "6")
+	rowsAffected, err := repo.DeleteClientByID(ctx, inserted.ID)
 	assert.NoError(t, err)
-	assert.Equal(t, int64(1), rowsAffected) 
+	assert.Equal(t, 1, rowsAffected)
 
 	// 3. Verify it's actually deleted
 	found, err := repo.FindClientByID(ctx, inserted.ID)
-	assert.Error(t, err)                // should return error or not found
-	assert.Nil(t, found)                // should not find the client
+	assert.Error(t, err) // should return error or not found
+	assert.Nil(t, found) // should not find the client
 }

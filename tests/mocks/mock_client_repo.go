@@ -13,8 +13,8 @@ type MockClientRepo struct {
 	GetByEmailFunc    func(ctx context.Context, email string) (*entities.Client, error)
 	InsertClientFunc  func(ctx context.Context, client *entities.Client) (*entities.Client, error)
 	FindClientByIDFunc func(ctx context.Context, id int) (*entities.Client, error)
-	UpdateClientByIDFunc func(ctx context.Context, id string, updates map[string]interface{}) (*entities.Client, error)
-	DeleteClientByIDFunc func(ctx context.Context, id string) (int, error)
+	UpdateClientByIDFunc func(ctx context.Context, id int, updates map[string]interface{}) (*entities.Client, error)
+	DeleteClientByIDFunc func(ctx context.Context, id int) (int, error)
 
 }
 
@@ -34,11 +34,11 @@ func (m *MockClientRepo) FindClientByID(ctx context.Context, id int) (*entities.
 	return m.FindClientByIDFunc(ctx, id)	
 }
 
-func (m *MockClientRepo) UpdateClientByID(ctx context.Context, id string, updates map[string]interface{}) (*entities.Client, error) {
+func (m *MockClientRepo) UpdateClientByID(ctx context.Context, id int, updates map[string]interface{}) (*entities.Client, error) {
 	return m.UpdateClientByIDFunc(ctx, id, updates)	
 }
 
-func (m *MockClientRepo) DeleteClientByID(ctx context.Context, id string) (int, error) {
+func (m *MockClientRepo) DeleteClientByID(ctx context.Context, id int) (int, error) {
 	return m.DeleteClientByIDFunc(ctx, id)	
 }
 

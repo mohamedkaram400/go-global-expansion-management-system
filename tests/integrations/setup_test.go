@@ -9,6 +9,7 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var TestDB *gorm.DB
@@ -29,7 +30,8 @@ func TestMain(m *testing.M) {
 	}
 
 	var err error
-	TestDB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
+	TestDB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent),})
+	
 	if err != nil {
 		log.Fatalf("❌ failed to connect to test DB: %v", err)
 	}

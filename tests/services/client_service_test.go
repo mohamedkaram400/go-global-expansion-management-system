@@ -141,14 +141,14 @@ func TestUpdateClientByID(t *testing.T) {
 			GetByEmailFunc: func(ctx context.Context, email string) (*entities.Client, error) {
 				return &entities.Client{ID: 2, ContactEmail: email}, nil // simulate existing user with same email
 			},
-			UpdateClientByIDFunc: func(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error) {
+			UpdateClientByIDFunc: func(ctx context.Context, clientID int, updates map[string]interface{}) (*entities.Client, error) {
 				return nil, nil
 			},
 		}
 
 		svc := services.NewClientService(mockRepo)
 		newClient := &entities.Client{ID: 1, CompanyName: "NewCo", ContactEmail: "new@test.com"}
-		client, err := svc.UpdateClientByID(ctx, "1", newClient)
+		client, err := svc.UpdateClientByID(ctx, 1, newClient)
 
 		assert.Nil(t, client)
 		assert.EqualError(t, err, "email already in use")
@@ -159,14 +159,14 @@ func TestUpdateClientByID(t *testing.T) {
 			GetByEmailFunc: func(ctx context.Context, email string) (*entities.Client, error) {
 				return nil, nil // no conflict
 			},
-			UpdateClientByIDFunc: func(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error) {
+			UpdateClientByIDFunc: func(ctx context.Context, clientID int, updates map[string]interface{}) (*entities.Client, error) {
 				return nil, errors.New("database error")
 			},
 		}
 
 		svc := services.NewClientService(mockRepo)
 		newClient := &entities.Client{ID: 1, CompanyName: "NewCo", ContactEmail: "new@test.com"}
-		client, err := svc.UpdateClientByID(ctx, "1", newClient)
+		client, err := svc.UpdateClientByID(ctx, 1, newClient)
 
 		assert.Nil(t, client)
 		assert.EqualError(t, err, "database error")
@@ -177,7 +177,7 @@ func TestUpdateClientByID(t *testing.T) {
 			GetByEmailFunc: func(ctx context.Context, email string) (*entities.Client, error) {
 				return nil, nil // no existing email
 			},
-			UpdateClientByIDFunc: func(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error) {
+			UpdateClientByIDFunc: func(ctx context.Context, clientID int, updates map[string]interface{}) (*entities.Client, error) {
 				return &entities.Client{
 					ID:           42,
 					CompanyName:  updates["company_name"].(string),
@@ -188,7 +188,7 @@ func TestUpdateClientByID(t *testing.T) {
 
 		svc := services.NewClientService(mockRepo)
 		newClient := &entities.Client{CompanyName: "NewCo", ContactEmail: "new@test.com"}
-		client, err := svc.UpdateClientByID(ctx, "1", newClient)
+		client, err := svc.UpdateClientByID(ctx, 1, newClient)
 
 		assert.NoError(t, err)
 		assert.NotNil(t, client)
@@ -203,13 +203,13 @@ func TestDeleteClientByID(t *testing.T) {
 
 	t.Run("error: client id not found", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			DeleteClientByIDFunc: func(ctx context.Context, clientID string) (int, error) {
+			DeleteClientByIDFunc: func(ctx context.Context, clientID int) (int, error) {
 				return 0, errors.New("database error")
 			},
 		}
 
 		svc := services.NewClientService(mockRepo)
-		isDeleted, err := svc.DeleteClientByID(ctx, "1")
+		isDeleted, err := svc.DeleteClientByID(ctx, 1)
 
 		// Assertions
 		assert.Equal(t, isDeleted, 0)
@@ -219,13 +219,13 @@ func TestDeleteClientByID(t *testing.T) {
 
 	t.Run("successfully deleted", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			DeleteClientByIDFunc: func(ctx context.Context, clientID string) (int, error) {
+			DeleteClientByIDFunc: func(ctx context.Context, clientID int) (int, error) {
 				return 1, nil
 			},
 		}
 
 		svc := services.NewClientService(mockRepo)
-		isDeleted, err := svc.DeleteClientByID(ctx, "1")
+		isDeleted, err := svc.DeleteClientByID(ctx, 1)
 
 		// Assertions
 		assert.Equal(t, isDeleted, 1)
