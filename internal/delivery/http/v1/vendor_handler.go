@@ -42,8 +42,8 @@ func (h *VendorHandler) Index(c *gin.Context) {
 }
 
 func (h *VendorHandler) Show(c *gin.Context) {
-    VendorID := c.Param("id")
-
+    idStr := c.Param("id")
+	VendorID, _ := strconv.Atoi(idStr)
 
 	newVendor, err := h.Service.FindVendorByID(c, VendorID)
     if err != nil {
@@ -84,8 +84,9 @@ func (h *VendorHandler) Create(c *gin.Context) {
 } 
 
 func (h *VendorHandler) Update(c *gin.Context) {
-    VendorID := c.Param("id")
-	
+    idStr := c.Param("id")
+	VendorID, _ := strconv.Atoi(idStr)
+
     var req requests.VendorRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -120,7 +121,8 @@ func (h *VendorHandler) Update(c *gin.Context) {
 }
 
 func (h *VendorHandler) Destroy(c *gin.Context) {
-    VendorID := c.Param("id")
+    idStr := c.Param("id")
+	VendorID, _ := strconv.Atoi(idStr)
 
     _, err := h.Service.DeleteVendorByID(c.Request.Context(), VendorID)
     if err != nil {
@@ -130,3 +132,4 @@ func (h *VendorHandler) Destroy(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, nil)
 }
+ 

@@ -50,13 +50,7 @@ func (h *ClientHandler) Index(c *gin.Context) {
 
 func (h *ClientHandler) Show(c *gin.Context) {
 	idStr := c.Param("id")
-
-	clientId64, err := strconv.ParseUint(idStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	}
-
-	clientID := uint(clientId64)
+	clientID, _ := strconv.Atoi(idStr)
 
 	newClient, err := h.Service.FindClientByID(c, clientID)
     if err != nil {

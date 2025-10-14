@@ -23,7 +23,7 @@ func NewMatchService(repo ports.MatchRepository, projectService *ProjectService,
 	return &MatchService{MatchRepo: repo, ProjectService: projectService, Notifier: notifier, ClientService: clientService}
 }
 
-func (svc *MatchService) Rebuild(ctx context.Context, projectID uint) ([]responses.MatchResponse, error) {
+func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]responses.MatchResponse, error) {
 
 	// 1. Load project from DB
 	project, err := svc.ProjectService.FindProjectByID(ctx, projectID)

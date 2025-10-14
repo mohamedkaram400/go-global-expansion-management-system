@@ -27,7 +27,7 @@ func (r *UserRepo) GetAllUsers(ctx context.Context, skip int, limit int) ([]enti
     return users, nil
 }
 
-func (r *UserRepo) FindUserByID(ctx context.Context, userID string) (*entities.User, error) {
+func (r *UserRepo) FindUserByID(ctx context.Context, userID int) (*entities.User, error) {
 	var user entities.User
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", userID).
@@ -60,7 +60,7 @@ func (r *UserRepo) InsertUser(ctx context.Context, user *entities.User) (*entiti
 	return user, nil
 }
 
-func (r *UserRepo) UpdateUserByID(ctx context.Context, userID string, updates map[string]interface{}) (*entities.User, error) {
+func (r *UserRepo) UpdateUserByID(ctx context.Context, userID int, updates map[string]interface{}) (*entities.User, error) {
 
 	user := &entities.User{}
 
@@ -82,7 +82,7 @@ func (r *UserRepo) UpdateUserByID(ctx context.Context, userID string, updates ma
     return user, nil
 }
 
-func (r *UserRepo) DeleteUserByID(ctx context.Context, userID string) (int, error) {
+func (r *UserRepo) DeleteUserByID(ctx context.Context, userID int) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", userID).
 		Delete(&entities.User{}).Error; err != nil {

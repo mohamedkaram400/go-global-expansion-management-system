@@ -8,8 +8,8 @@ import (
 
 
 type ProjectResponse struct {
-	ID                 uint      `json:"id"`                 
-	ClientId        uint      `json:"client_id"`
+	ID              int       `json:"id"`                 
+	ClientId        int       `json:"client_id"`
 	ServicesNeeded  []string  `json:"service_needed"`
 	Country    		string    `json:"country"`
 	Budget          float64   `json:"budget"`

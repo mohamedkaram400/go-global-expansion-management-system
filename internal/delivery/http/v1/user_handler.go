@@ -40,8 +40,8 @@ func (h *UserHandler) Index(c *gin.Context) {
 }
 
 func (h *UserHandler) Show(c *gin.Context) {
-    UserID := c.Param("id")
-
+    idStr := c.Param("id")
+	UserID, _ := strconv.Atoi(idStr)
 
 	user, err := h.Service.FindUserByID(c, UserID)
     if err != nil {
@@ -51,7 +51,7 @@ func (h *UserHandler) Show(c *gin.Context) {
 
 	response := generic_api_response.APIResponse{
 		Message: "User Returned Successfully",
-		Data:    responses.FormatUser(user),
+		Data:    responses.FormatUser(user), 
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -80,7 +80,8 @@ func (h *UserHandler) Create(c *gin.Context) {
 } 
 
 func (h *UserHandler) Update(c *gin.Context) {
-    UserID := c.Param("id")
+    idStr := c.Param("id")
+	UserID, _ := strconv.Atoi(idStr)
 	
     var req requests.UserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -109,7 +110,8 @@ func (h *UserHandler) Update(c *gin.Context) {
 }
 
 func (h *UserHandler) Destroy(c *gin.Context) {
-    UserID := c.Param("id")
+    idStr := c.Param("id")
+	UserID, _ := strconv.Atoi(idStr)
 
     _, err := h.Service.DeleteUserByID(c.Request.Context(), UserID)
     if err != nil {

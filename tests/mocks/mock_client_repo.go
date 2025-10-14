@@ -12,7 +12,7 @@ type MockClientRepo struct {
 	GetAllClientsFunc func(ctx context.Context, skip, limit int) ([]entities.Client, error)
 	GetByEmailFunc    func(ctx context.Context, email string) (*entities.Client, error)
 	InsertClientFunc  func(ctx context.Context, client *entities.Client) (*entities.Client, error)
-	FindClientByIDFunc func(ctx context.Context, id uint) (*entities.Client, error)
+	FindClientByIDFunc func(ctx context.Context, id int) (*entities.Client, error)
 	UpdateClientByIDFunc func(ctx context.Context, id string, updates map[string]interface{}) (*entities.Client, error)
 	DeleteClientByIDFunc func(ctx context.Context, id string) (int, error)
 
@@ -30,7 +30,7 @@ func (m *MockClientRepo) GetAllClients(ctx context.Context, skip, limit int) ([]
 	return m.GetAllClientsFunc(ctx, skip, limit)	
 }
 
-func (m *MockClientRepo) FindClientByID(ctx context.Context, id uint) (*entities.Client, error) {
+func (m *MockClientRepo) FindClientByID(ctx context.Context, id int) (*entities.Client, error) {
 	return m.FindClientByIDFunc(ctx, id)	
 }
 

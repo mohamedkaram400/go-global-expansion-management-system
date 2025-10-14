@@ -45,7 +45,7 @@ func (r *MatchRepo) UpsertMatch(ctx context.Context, match *entities.Match) erro
 func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[string][]entities.VendorAnalytics, error) {
 	type Result struct {
 		Country       string
-		VendorID      uint
+		VendorID      int
 		VendorName    string
 		AvgMatchScore float64
 	}

@@ -5,7 +5,7 @@ import (
 )
 
 type ClientDTO struct {
-	ID           uint      `json:"id"`
+	ID           int       `json:"id"`
 	CompanyName  string    `json:"company_name"`
 	ContactEmail string    `jso:"contect_email"`
 }

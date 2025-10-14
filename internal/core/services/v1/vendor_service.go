@@ -23,7 +23,7 @@ func (svc *VendorService) GetAllVendors(ctx context.Context, skip int, limit int
 	return svc.Repo.GetAllVendors(ctx, skip, limit)
 }
  
-func (svc *VendorService) FindVendorByID(ctx context.Context, VendorID string) (*entities.Vendor, error) {
+func (svc *VendorService) FindVendorByID(ctx context.Context, VendorID int) (*entities.Vendor, error) {
 	return svc.Repo.FindVendorByID(ctx, VendorID)
 
 }
@@ -43,7 +43,7 @@ func (svc *VendorService) InsertVendor(ctx context.Context, req *requests.Vendor
 	return svc.Repo.InsertVendor(ctx, Vendor)
 }
 
-func (svc *VendorService) UpdateVendorByID(ctx context.Context, VendorID string, newVendor *entities.Vendor) (*entities.Vendor, error) {
+func (svc *VendorService) UpdateVendorByID(ctx context.Context, VendorID int, newVendor *entities.Vendor) (*entities.Vendor, error) {
 	updates := map[string]interface{}{}
 
     if newVendor.Name != "" {
@@ -74,7 +74,7 @@ func (svc *VendorService) UpdateVendorByID(ctx context.Context, VendorID string,
 	return svc.Repo.UpdateVendorByID(ctx, VendorID, updates)
 }
 
-func (svc *VendorService) DeleteVendorByID(ctx context.Context, VendorID string) (int, error) {
+func (svc *VendorService) DeleteVendorByID(ctx context.Context, VendorID int) (int, error) {
 	return svc.Repo.DeleteVendorByID(ctx, VendorID)
 
 }

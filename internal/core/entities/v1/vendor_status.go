@@ -3,11 +3,11 @@ package entities
 import "time"
 
 type VendorStatus struct {
-    ID             uint           `gorm:"primaryKey"`
+    ID             int            `gorm:"primaryKey"`
     SlaExpired     bool           `gorm:"default:false"`
     CheckRunAt     time.Time      `gorm:"autoCreateTime"`
     LastResponseAt *time.Time     
 
-    VendorID uint   `gorm:"not null"`
+    VendorID int    `gorm:"not null"`
     Vendor   Vendor `gorm:"foreignKey:VendorID;references:ID"`
 }

@@ -29,7 +29,7 @@ func (r *VendorRepo) GetAllVendors(ctx context.Context, skip int, limit int) ([]
 	return vendors, nil
 }
 
-func (r *VendorRepo) FindVendorByID(ctx context.Context, vendorID string) (*entities.Vendor, error) {
+func (r *VendorRepo) FindVendorByID(ctx context.Context, vendorID int) (*entities.Vendor, error) {
 	var vendor entities.Vendor
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", vendorID).
@@ -63,7 +63,7 @@ func (r *VendorRepo) InsertVendor(ctx context.Context, vendor *entities.Vendor) 
 	return vendor, nil
 }
 
-func (r *VendorRepo) UpdateVendorByID(ctx context.Context, vendorID string, updates map[string]interface{}) (*entities.Vendor, error) {
+func (r *VendorRepo) UpdateVendorByID(ctx context.Context, vendorID int, updates map[string]interface{}) (*entities.Vendor, error) {
 
 	vendor := &entities.Vendor{}
 
@@ -85,7 +85,7 @@ func (r *VendorRepo) UpdateVendorByID(ctx context.Context, vendorID string, upda
 	return vendor, nil
 }
 
-func (r *VendorRepo) DeleteVendorByID(ctx context.Context, vendorID string) (int, error) {
+func (r *VendorRepo) DeleteVendorByID(ctx context.Context, vendorID int) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", vendorID).
 		Delete(&entities.Vendor{}).Error; err != nil {

@@ -18,7 +18,7 @@ func TestFeatchAllClients(t *testing.T) {
 	t.Run("error: while fetching clients", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
 			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Client, error) {
-				return nil, errors.New("database error") 
+				return nil, errors.New("database error")
 			},
 		}
 
@@ -31,10 +31,9 @@ func TestFeatchAllClients(t *testing.T) {
 		assert.Equal(t, "database error", err.Error())
 	})
 
-
-	t.Run("successfully featched", func (t *testing.T)  {
+	t.Run("successfully featched", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			GetAllClientsFunc: func (ctx context.Context, skip int, limit int) ([]entities.Client, error)  {
+			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Client, error) {
 				return []entities.Client{
 					{ID: 1, CompanyName: "Test Co", ContactEmail: "a@test.com"},
 					{ID: 1, CompanyName: "Another Co", ContactEmail: "b@test.com"},
@@ -48,7 +47,7 @@ func TestFeatchAllClients(t *testing.T) {
 		// Assertions
 		assert.NoError(t, err)
 		assert.NotNil(t, clients)
-		assert.Equal(t, 2, len(clients)) 
+		assert.Equal(t, 2, len(clients))
 		assert.Equal(t, "Test Co", clients[0].CompanyName)
 	})
 }
@@ -57,25 +56,25 @@ func TestFindClientByID(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("error: client id not found", func(t *testing.T) {
-			mockRepo := &mocks.MockClientRepo{
-				FindClientByIDFunc: func(ctx context.Context, clientID uint) (*entities.Client, error) {
-					return nil, errors.New("database error") 
-				},
-			}
+		mockRepo := &mocks.MockClientRepo{
+			FindClientByIDFunc: func(ctx context.Context, clientID int) (*entities.Client, error) {
+				return nil, errors.New("database error")
+			},
+		}
 
-			svc := services.NewClientService(mockRepo)
+		svc := services.NewClientService(mockRepo)
 
-			client, err := svc.FindClientByID(ctx, 1)
+		client, err := svc.FindClientByID(ctx, 1)
 
-			// Assertions
-			assert.Nil(t, client)
-			assert.Error(t, err)		
-			assert.EqualError(t, err, "database error")
+		// Assertions
+		assert.Nil(t, client)
+		assert.Error(t, err)
+		assert.EqualError(t, err, "database error")
 	})
 
 	t.Run("successfully returned", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			FindClientByIDFunc: func(ctx context.Context, clientID uint) (*entities.Client, error) {
+			FindClientByIDFunc: func(ctx context.Context, clientID int) (*entities.Client, error) {
 				return &entities.Client{ID: clientID, CompanyName: "Test Co"}, nil
 			},
 		}
@@ -130,10 +129,10 @@ func TestInsertClient(t *testing.T) {
 
 		// Assertions
 		assert.NoError(t, err)
-		assert.Equal(t, uint(42), client.ID)
+		assert.Equal(t, 42, client.ID)
 	})
 }
- 
+
 func TestUpdateClientByID(t *testing.T) {
 	ctx := context.Background()
 
@@ -180,9 +179,9 @@ func TestUpdateClientByID(t *testing.T) {
 			},
 			UpdateClientByIDFunc: func(ctx context.Context, clientID string, updates map[string]interface{}) (*entities.Client, error) {
 				return &entities.Client{
-					ID:            42,
-					CompanyName:   updates["company_name"].(string),
-					ContactEmail:  updates["contact_email"].(string),
+					ID:           42,
+					CompanyName:  updates["company_name"].(string),
+					ContactEmail: updates["contact_email"].(string),
 				}, nil
 			},
 		}
@@ -193,29 +192,29 @@ func TestUpdateClientByID(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.NotNil(t, client)
-		assert.Equal(t, uint(42), client.ID)
+		assert.Equal(t, 42, client.ID)
 		assert.Equal(t, "NewCo", client.CompanyName)
 		assert.Equal(t, "new@test.com", client.ContactEmail)
 	})
 }
- 
+
 func TestDeleteClientByID(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("error: client id not found", func(t *testing.T) {
-			mockRepo := &mocks.MockClientRepo{
-				DeleteClientByIDFunc: func(ctx context.Context, clientID string) (int, error) {
-					return 0, errors.New("database error") 
-				},
-			}
+		mockRepo := &mocks.MockClientRepo{
+			DeleteClientByIDFunc: func(ctx context.Context, clientID string) (int, error) {
+				return 0, errors.New("database error")
+			},
+		}
 
-			svc := services.NewClientService(mockRepo)
-			isDeleted, err := svc.DeleteClientByID(ctx, "1")
+		svc := services.NewClientService(mockRepo)
+		isDeleted, err := svc.DeleteClientByID(ctx, "1")
 
-			// Assertions
-			assert.Equal(t, isDeleted, 0)
-			assert.Error(t, err)		
-			assert.EqualError(t, err, "database error")
+		// Assertions
+		assert.Equal(t, isDeleted, 0)
+		assert.Error(t, err)
+		assert.EqualError(t, err, "database error")
 	})
 
 	t.Run("successfully deleted", func(t *testing.T) {

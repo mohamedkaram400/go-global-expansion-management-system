@@ -22,7 +22,7 @@ func (svc *ClientService) GetAllClients(ctx context.Context, skip int, limit int
 	return svc.Repo.GetAllClients(ctx, skip, limit)
 }
  
-func (svc *ClientService) FindClientByID(ctx context.Context, clientID uint) (*entities.Client, error) {
+func (svc *ClientService) FindClientByID(ctx context.Context, clientID int) (*entities.Client, error) {
 	return svc.Repo.FindClientByID(ctx, clientID)
 
 }
@@ -45,7 +45,7 @@ func (svc *ClientService) InsertClient(ctx context.Context, req *requests.Client
     }
 
 	return svc.Repo.InsertClient(ctx, client)
-}
+} 
 
 func (svc *ClientService) UpdateClientByID(ctx context.Context, clientID string, newClient *entities.Client) (*entities.Client, error) {
 	updates := map[string]interface{}{}

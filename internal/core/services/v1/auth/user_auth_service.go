@@ -48,7 +48,7 @@ func (svc *UserAuthService) Login(ctx context.Context, req *requests.UserLoginRe
 	return user, accessToken, refreshToken, nil
 }
 
-func (svc *UserAuthService) Logout(userID uint) error {
+func (svc *UserAuthService) Logout(userID string) error {
 	err := pkg.DeleteRefreshToken(userID)
 	if err != nil {
 		return errors.New("failed to store refresh token")

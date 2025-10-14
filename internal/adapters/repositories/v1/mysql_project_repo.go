@@ -27,7 +27,7 @@ func (r *ProjectRepo) GetAllProjects(ctx context.Context, skip int, limit int) (
 	return projects, nil
 }
 
-func (r *ProjectRepo) FindProjectByID(ctx context.Context, projectID uint) (*entities.Project, error) {
+func (r *ProjectRepo) FindProjectByID(ctx context.Context, projectID int) (*entities.Project, error) {
 	var project entities.Project
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", projectID).
@@ -48,7 +48,7 @@ func (r *ProjectRepo) InsertProject(ctx context.Context, project *entities.Proje
 	return project, nil
 }
 
-func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID uint, updates map[string]interface{}) (*entities.Project, error) {
+func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID int, updates map[string]interface{}) (*entities.Project, error) {
 
 	project := &entities.Project{}
 
@@ -70,7 +70,7 @@ func (r *ProjectRepo) UpdateProjectByID(ctx context.Context, projectID uint, upd
 	return project, nil
 }
 
-func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID uint) (int, error) {
+func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID int) (int, error) {
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", projectID).
 		Delete(&entities.Project{}).Error; err != nil {
@@ -80,16 +80,16 @@ func (r *ProjectRepo) DeleteProjectByID(ctx context.Context, projectID uint) (in
 	return 1, nil
 }
 
-func (r *ProjectRepo) GetProjectCountries(ctx context.Context) (map[uint]string, error) {
+func (r *ProjectRepo) GetProjectCountries(ctx context.Context) (map[int]string, error) {
 	rows, err := r.DB.WithContext(ctx).Raw("SELECT id, country FROM projects").Rows()
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	result := make(map[uint]string)
+	result := make(map[int]string)
 	for rows.Next() {
-		var id uint
+		var id int
 		var country string
 		if err := rows.Scan(&id, &country); err != nil {
 			return nil, err

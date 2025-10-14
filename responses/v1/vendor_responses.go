@@ -8,12 +8,12 @@ import (
 
 
 type VendorResponse struct {
-	ID                 uint      `json:"id"`                 
+	ID                 int       `json:"id"`                 
 	Name               string    `json:"name"`
 	CountriesSupported []string  `json:"countries_supported"`
 	ServicesOffered    []string  `json:"services_offered"`
 	Rating             float64   `json:"rating"`
-	ResponseSlaHours   uint      `json:"response_sla_hours"`
+	ResponseSlaHours   int       `json:"response_sla_hours"`
 }
 
 

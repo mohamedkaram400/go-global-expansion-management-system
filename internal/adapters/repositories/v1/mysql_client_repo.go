@@ -26,8 +26,8 @@ func (r *ClientRepo) GetAllClients(ctx context.Context, skip int, limit int) ([]
     }
     return clients, nil
 }
-
-func (r *ClientRepo) FindClientByID(ctx context.Context, clientID uint) (*entities.Client, error) {
+ 
+func (r *ClientRepo) FindClientByID(ctx context.Context, clientID int) (*entities.Client, error) {
 	var client entities.Client
 	if err := r.DB.WithContext(ctx).
 		Where("id = ?", clientID).

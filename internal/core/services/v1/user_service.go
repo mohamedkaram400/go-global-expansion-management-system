@@ -22,7 +22,7 @@ func (svc *UserService) GetAllUsers(ctx context.Context, skip int, limit int) ([
 	return svc.Repo.GetAllUsers(ctx, skip, limit)
 }
  
-func (svc *UserService) FindUserByID(ctx context.Context, userID string) (*entities.User, error) {
+func (svc *UserService) FindUserByID(ctx context.Context, userID int) (*entities.User, error) {
 	return svc.Repo.FindUserByID(ctx, userID)
 
 }
@@ -46,7 +46,7 @@ func (svc *UserService) InsertUser(ctx context.Context, req *requests.UserReques
 	return svc.Repo.InsertUser(ctx, user)
 }
 
-func (svc *UserService) UpdateUserByID(ctx context.Context, userID string, newUser *entities.User) (*entities.User, error) {
+func (svc *UserService) UpdateUserByID(ctx context.Context, userID int, newUser *entities.User) (*entities.User, error) {
 	updates := map[string]interface{}{}
 
 	if newUser.Name != "" {
@@ -69,7 +69,7 @@ func (svc *UserService) UpdateUserByID(ctx context.Context, userID string, newUs
 	return svc.Repo.UpdateUserByID(ctx, userID, updates)
 }
 
-func (svc *UserService) DeleteUserByID(ctx context.Context, userID string) (int, error) {
+func (svc *UserService) DeleteUserByID(ctx context.Context, userID int) (int, error) {
 	return svc.Repo.DeleteUserByID(ctx, userID)
 
 }

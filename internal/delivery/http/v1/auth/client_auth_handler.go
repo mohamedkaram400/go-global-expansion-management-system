@@ -81,9 +81,9 @@ func (h *ClientAuthHandler) Logout(c *gin.Context) {
 	}
 
 	// 2️⃣ Check if clientID is a valid string
-	clientID, ok := clientIDVal.(uint)
+	clientID, ok := clientIDVal.(string)
 
-	if !ok || clientID == 0 {
+	if !ok || clientID == "0" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid client ID"})
 		return
 	}

@@ -17,7 +17,7 @@ const (
 	RefreshToken TokenType = "refresh"
 )
 
-func GenerateToken(subjectKey string, subjectID uint, duration time.Duration, tokenType TokenType) (string, error) {
+func GenerateToken(subjectKey string, subjectID int, duration time.Duration, tokenType TokenType) (string, error) {
 
 	claims := jwt.MapClaims{
 		subjectKey		: subjectID,
@@ -29,15 +29,15 @@ func GenerateToken(subjectKey string, subjectID uint, duration time.Duration, to
 	return token.SignedString(jwtSecret)
 } 
 
-func GenerateAccessToken(subjectKey string, subjectID uint, hours int) (string, error) {
+func GenerateAccessToken(subjectKey string, subjectID int, hours int) (string, error) {
 	return GenerateToken(subjectKey, subjectID,  time.Duration(hours)*time.Hour, AccessToken)
 }
 
-func GenerateRefreshToken(subjectKey string, subjectID uint, days int) (string, error) {
+func GenerateRefreshToken(subjectKey string, subjectID int, days int) (string, error) {
 	return GenerateToken(subjectKey, subjectID,  time.Duration(days)*24*time.Hour, RefreshToken)
 }
 
-func ValidateJWT(tokenString string, key string) (uint, error) {
+func ValidateJWT(tokenString string, key string) (int, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -59,6 +59,6 @@ func ValidateJWT(tokenString string, key string) (uint, error) {
 		return 0, errors.New("id not found in token")
 	}
 	
-	return uint(idFloat), nil
+	return int(idFloat), nil
 }
 

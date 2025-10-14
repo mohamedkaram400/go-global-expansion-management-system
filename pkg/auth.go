@@ -4,8 +4,9 @@ import (
 	"context"
 	"strconv"
 	"time"
-	"golang.org/x/crypto/bcrypt"
+
 	"github.com/mohamedkaram400/go-global-expansion-management-system/auth"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 )
@@ -19,7 +20,7 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func StoreRefreshToken(ctx context.Context, id uint, token string, days int) error {
+func StoreRefreshToken(ctx context.Context, id int, token string, days int) error {
 	return conn.RedisClient.Set(ctx,
 		strconv.Itoa(int(id)),
 		token,
@@ -27,13 +28,11 @@ func StoreRefreshToken(ctx context.Context, id uint, token string, days int) err
 	).Err()
 }
 
-func DeleteRefreshToken(id uint) error {
-	return conn.RedisClient.Del(context.Background(),
-		strconv.FormatUint(uint64(id), 10),
-	).Err()
+func DeleteRefreshToken(id string) error {
+	return conn.RedisClient.Del(context.Background(),id).Err()
 }
 
-func IssueTokens(subjectKey string, subjectID uint, accessHours, refreshDays int) (string, string, error) {
+func IssueTokens(subjectKey string, subjectID int, accessHours, refreshDays int) (string, string, error) {
 
 	// Access token (short-lived, 15 min)
 	accessToken, err := auth.GenerateAccessToken(subjectKey, subjectID, accessHours)

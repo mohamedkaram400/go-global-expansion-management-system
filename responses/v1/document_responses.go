@@ -6,7 +6,7 @@ import (
 
 
 type DocumentResponse struct {
-	ProjectId 	   uint 	`json:"project_id" `
+	ProjectId 	   int  	`json:"project_id" `
 	Title  		   string 	`json:"title"`
 	Content 	   string	`json:"content"`
 	Tags		   []string	`json:"tags"`

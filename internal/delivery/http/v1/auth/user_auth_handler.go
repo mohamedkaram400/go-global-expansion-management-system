@@ -58,9 +58,9 @@ func (h *UserAuthHandler) Logout(c *gin.Context) {
 	}
 
 	// 2️⃣ Check if userID is a valid string
-	userID, ok := userIDVal.(uint)
+	userID, ok := userIDVal.(string)
 
-	if !ok || userID == 0 {
+	if !ok || userID == "0" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid user ID"})
 		return
 	}

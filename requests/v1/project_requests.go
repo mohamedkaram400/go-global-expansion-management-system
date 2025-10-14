@@ -7,7 +7,7 @@ import (
 var validate = validator.New()
 
 type ProjectRequest struct {
-	ClientId        uint                    `json:"client_id"        validate:"required,gt=0"`
+	ClientId        int                     `json:"client_id"        validate:"required,gt=0"`
 	ServicesNeeded  []string                `json:"service_needed"   validate:"required,min=1"`
 	Country         string                  `json:"country"          validate:"required"`
 	Budget          float64                 `json:"budget"           validate:"required,gte=1"`

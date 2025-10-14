@@ -49,7 +49,7 @@ func (r *ResearchDocumentRepo) SearchOnDocument(ctx context.Context, searchTerm 
 	return documents, nil
 }
 
-func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (map[uint]int, error) {
+func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (map[int]int, error) {
 
 	pipeline := mongo.Pipeline{
 		{{Key: "$group", Value: bson.D{
@@ -64,11 +64,11 @@ func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (
 	}
 	defer cursor.Close(ctx)
 
-	result := make(map[uint]int)
+	result := make(map[int]int)
 
 	for cursor.Next(ctx) {
 		var doc struct {
-			ProjectID uint `bson:"_id"`
+			ProjectID int `bson:"_id"`
 			Count     int  `bson:"count"`
 		}
 		if err := cursor.Decode(&doc); err != nil {
