@@ -15,7 +15,7 @@ func ConnectSQLite() (*gorm.DB, error) {
 	wd, _ := os.Getwd()
     dbPath := filepath.Join(wd, "tmp", "my_test_database.db")
 
-log.Printf("Using SQLite file at: %s", dbPath)
+	log.Printf("Using SQLite file at: %s", dbPath)
 
 	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
