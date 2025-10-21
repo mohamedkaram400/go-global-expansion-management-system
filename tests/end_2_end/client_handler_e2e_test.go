@@ -21,7 +21,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setupRouter() *gin.Engine {
+func setupClientRouter() *gin.Engine {
 	db := conn.SetupTestDB()
 	clientRepo := repositories.NewClientRepo(db)
 	clientService := services.NewClientService(clientRepo)
@@ -38,7 +38,7 @@ func setupRouter() *gin.Engine {
 }
 
 func TestGetAllClients(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	req, _ := http.NewRequest("GET", "/clients?skip=0&limit=10", nil)
 	resp := httptest.NewRecorder()
@@ -48,7 +48,7 @@ func TestGetAllClients(t *testing.T) {
 }
 
 func TestGetClientById(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	req, _ := http.NewRequest("GET", "/clients/2", nil)
 
@@ -59,7 +59,7 @@ func TestGetClientById(t *testing.T) {
 }
 
 func TestCreateClient(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	email := fmt.Sprintf("test_%d@example.com", time.Now().UnixNano())
 
@@ -84,7 +84,7 @@ func TestCreateClient(t *testing.T) {
 }
 
 func TestUpdateClient(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	// First, create a client to update
 	createBody := map[string]interface{}{
@@ -132,7 +132,7 @@ func TestUpdateClient(t *testing.T) {
 }
 
 func TestDeleteClient(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	req, _ := http.NewRequest("DELETE", "/clients/4", nil)
 
@@ -143,7 +143,7 @@ func TestDeleteClient(t *testing.T) {
 }
 
 func TestClientHandler_EndToEnd(t *testing.T) {
-	router := setupRouter()
+	router := setupClientRouter()
 
 	// ---- 1. CREATE ----
 	createBody := map[string]interface{}{
