@@ -4,5 +4,5 @@ type UserRequest struct {
     Name         string `json:"name"  binding:"required,min=3"`
     Email        string `json:"email" binding:"required,email"`
     Role         string `json:"role"  binding:"required,oneof=Admin Support"`
-	Password     string `json:"password" binding:"password;not null"`
+    Password     string `json:"password" binding:"required,min=6"`
 }
