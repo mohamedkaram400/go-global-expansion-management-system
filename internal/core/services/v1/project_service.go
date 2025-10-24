@@ -11,7 +11,7 @@ import (
 )
 
 type ProjectService struct {
-	Repo ports.ProjectRepository 
+	Repo ports.ProjectRepository  
 }
 
 func NewProjectService(repo ports.ProjectRepository) *ProjectService {
@@ -71,6 +71,6 @@ func (svc *ProjectService) DeleteProjectByID(ctx context.Context, projectID int)
 	return svc.Repo.DeleteProjectByID(ctx, projectID)
 }
 
-func (svc *ProjectService) FindActiveProjects(ctx context.Context) ([]*entities.Project, error) {
+func (svc *ProjectService) GetAllActiveProjects(ctx context.Context) ([]*entities.Project, error) {
 	return svc.Repo.GetAllActiveProjects(ctx)
 }

@@ -24,7 +24,7 @@ func (j *RefreshMatchesJob) Execute(ctx context.Context) error {
     log.Println("Running RefreshMatchesJob...")
 
     // load projects here
-    projects, err := j.ProjectService.FindActiveProjects(ctx)
+    projects, err := j.ProjectService.GetAllActiveProjects(ctx)
     if err != nil {
         return err
     }
