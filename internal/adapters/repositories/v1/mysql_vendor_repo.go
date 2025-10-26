@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
-	"fmt"
+	// "fmt"
 	"time"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
@@ -39,7 +39,7 @@ func (r *VendorRepo) FindVendorByID(ctx context.Context, vendorID int) (*entitie
 		}
 		return nil, err
 	}
-	fmt.Printf("✅ Vendor inserted: %+v\n", vendor) // debug
+	// fmt.Printf("✅ Vendor inserted: %+v\n", vendor) // debug
 
 	return &vendor, nil
 }
@@ -111,3 +111,4 @@ func (s *VendorRepo) FlagExpiredSLAs(ctx context.Context) error {
     return res.Error
 }
 
+ 
