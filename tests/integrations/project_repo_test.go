@@ -19,7 +19,7 @@ func TestGetAllProjects(t *testing.T) {
 	repo := repositories.NewProjectRepo(db)
 	ctx := context.Background()
 
-	servicesNeeded := []string{"legal","hiring"}
+	servicesNeeded := []string{"legal", "hiring"}
 
 	servicesJSON, err := json.Marshal(servicesNeeded)
 	if err != nil {
@@ -27,10 +27,10 @@ func TestGetAllProjects(t *testing.T) {
 	}
 
 	// Seed test data
-	ProjectsData := []entities.Project{
+	ProjectsData := []*entities.Project{
 		{Country: "Egypt", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3400},
-		{Country: "KSA", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3500},
-		{Country: "UAE", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3600},
+		{Country: "KSA", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3500},
+		{Country: "UAE", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3600},
 	}
 
 	if err := db.Create(&ProjectsData).Error; err != nil {
@@ -115,9 +115,9 @@ func TestUpdateProject(t *testing.T) {
 	}
 
 	updates := map[string]interface{}{
-		"Country":  "KSA",
+		"Country":        "KSA",
 		"ServicesNeeded": updatedServicesJSON,
-		"Budget":      4000,
+		"Budget":         4000,
 	}
 
 	updated, err := repo.UpdateProjectByID(ctx, project.ID, updates)
@@ -162,11 +162,11 @@ func TestDeleteProject(t *testing.T) {
 
 func TestGetProjectCountries(t *testing.T) {
 	db := conn.SetupTestDB()
-	// db = db.Debug() 
+	// db = db.Debug()
 	repo := repositories.NewProjectRepo(db)
 	ctx := context.Background()
 
-	servicesNeeded := []string{"legal","hiring"}
+	servicesNeeded := []string{"legal", "hiring"}
 
 	servicesJSON, err := json.Marshal(servicesNeeded)
 	if err != nil {
@@ -174,13 +174,13 @@ func TestGetProjectCountries(t *testing.T) {
 	}
 
 	// Seed test data
-	ProjectsData := []entities.Project{
+	ProjectsData := []*entities.Project{
 		{Country: "Egypt", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3400},
-		{Country: "KSA", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
-		{Country: "UAE", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
+		{Country: "KSA", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
+		{Country: "UAE", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
 	}
 
-	if err := db.Create(&ProjectsData).Error; err != nil { 
+	if err := db.Create(&ProjectsData).Error; err != nil {
 		t.Fatalf("failed to seed projects: %v", err)
 	}
 
@@ -198,7 +198,7 @@ func TestGetAllActiveProjects(t *testing.T) {
 	repo := repositories.NewProjectRepo(db)
 	ctx := context.Background()
 
-	servicesNeeded := []string{"legal","hiring"}
+	servicesNeeded := []string{"legal", "hiring"}
 
 	servicesJSON, err := json.Marshal(servicesNeeded)
 	if err != nil {
@@ -206,10 +206,10 @@ func TestGetAllActiveProjects(t *testing.T) {
 	}
 
 	// Seed test data
-	ProjectsData := []entities.Project{
+	ProjectsData := []*entities.Project{
 		{Country: "Egypt", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3400},
-		{Country: "KSA", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
-		{Country: "UAE", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
+		{Country: "KSA", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
+		{Country: "UAE", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
 	}
 
 	if err := db.Create(&ProjectsData).Error; err != nil {
@@ -223,6 +223,6 @@ func TestGetAllActiveProjects(t *testing.T) {
 }
 
 func prettyPrint(data any) {
-    b, _ := json.MarshalIndent(data, "", "  ")
-    fmt.Println(string(b))
+	b, _ := json.MarshalIndent(data, "", "  ")
+	fmt.Println(string(b))
 }

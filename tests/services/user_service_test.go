@@ -17,7 +17,7 @@ func TestFeatchAllUsers(t *testing.T) {
 
 	t.Run("error: while fetching users", func(t *testing.T) {
 		mockRepo := &mocks.MockUserRepo{
-			GetAllUsersFunc: func(ctx context.Context, skip int, limit int) ([]entities.User, error) {
+			GetAllUsersFunc: func(ctx context.Context, skip int, limit int) ([]*entities.User, error) {
 				return nil, errors.New("database error")
 			},
 		}
@@ -33,8 +33,8 @@ func TestFeatchAllUsers(t *testing.T) {
 
 	t.Run("successfully featched", func(t *testing.T) {
 		mockRepo := &mocks.MockUserRepo{
-			GetAllUsersFunc: func(ctx context.Context, skip int, limit int) ([]entities.User, error) {
-				return []entities.User{
+			GetAllUsersFunc: func(ctx context.Context, skip int, limit int) ([]*entities.User, error) {
+				return []*entities.User{
 					{ID: 1, Name: "Test Co", Email: "a@test.com"},
 					{ID: 1, Name: "Another Co", Email: "b@test.com"},
 				}, nil
@@ -179,7 +179,7 @@ func TestUpdateUserByID(t *testing.T) {
 			},
 			UpdateUserByIDFunc: func(ctx context.Context, userID int, updates map[string]interface{}) (*entities.User, error) {
 				return &entities.User{
-					ID:           42,
+					ID:    42,
 					Name:  updates["name"].(string),
 					Email: updates["email"].(string),
 				}, nil

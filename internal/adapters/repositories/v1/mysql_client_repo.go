@@ -16,17 +16,17 @@ func NewClientRepo(db *gorm.DB) *ClientRepo {
 	return &ClientRepo{DB: db}
 }
 
-func (r *ClientRepo) GetAllClients(ctx context.Context, skip int, limit int) ([]entities.Client, error) {
-    var clients []entities.Client
-    if err := r.DB.WithContext(ctx).
-        Offset(skip).
-        Limit(limit).
-        Find(&clients).Error; err != nil {
-        return nil, err
-    }
-    return clients, nil
+func (r *ClientRepo) GetAllClients(ctx context.Context, skip int, limit int) ([]*entities.Client, error) {
+	var clients []*entities.Client
+	if err := r.DB.WithContext(ctx).
+		Offset(skip).
+		Limit(limit).
+		Find(&clients).Error; err != nil {
+		return nil, err
+	}
+	return clients, nil
 }
- 
+
 func (r *ClientRepo) FindClientByID(ctx context.Context, clientID int) (*entities.Client, error) {
 	var client entities.Client
 	if err := r.DB.WithContext(ctx).
@@ -64,22 +64,22 @@ func (r *ClientRepo) UpdateClientByID(ctx context.Context, clientID int, updates
 
 	client := &entities.Client{}
 
-    // Update the client
-    if err := r.DB.WithContext(ctx).
-        Model(client).
-        Where("id = ?", clientID).
-        Updates(updates).Error; err != nil {
-        return nil, err
-    }
+	// Update the client
+	if err := r.DB.WithContext(ctx).
+		Model(client).
+		Where("id = ?", clientID).
+		Updates(updates).Error; err != nil {
+		return nil, err
+	}
 
-    // Fetch the updated record
-    if err := r.DB.WithContext(ctx).
-        Where("id = ?", clientID).
-        First(client).Error; err != nil {
-        return nil, err
-    }
+	// Fetch the updated record
+	if err := r.DB.WithContext(ctx).
+		Where("id = ?", clientID).
+		First(client).Error; err != nil {
+		return nil, err
+	}
 
-    return client, nil
+	return client, nil
 }
 
 func (r *ClientRepo) DeleteClientByID(ctx context.Context, clientID int) (int, error) {

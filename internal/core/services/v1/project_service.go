@@ -11,17 +11,17 @@ import (
 )
 
 type ProjectService struct {
-	Repo ports.ProjectRepository  
+	Repo ports.ProjectRepository
 }
 
 func NewProjectService(repo ports.ProjectRepository) *ProjectService {
 	return &ProjectService{Repo: repo}
 }
 
-func (svc *ProjectService) GetAllProjects(ctx context.Context, skip int, limit int) ([]entities.Project, error) {
+func (svc *ProjectService) GetAllProjects(ctx context.Context, skip int, limit int) ([]*entities.Project, error) {
 	return svc.Repo.GetAllProjects(ctx, skip, limit)
 }
- 
+
 func (svc *ProjectService) FindProjectByID(ctx context.Context, projectID int) (*entities.Project, error) {
 	return svc.Repo.FindProjectByID(ctx, projectID)
 
@@ -31,12 +31,11 @@ func (svc *ProjectService) InsertProject(ctx context.Context, req *requests.Proj
 	services, _ := json.Marshal(req.ServicesNeeded)
 
 	project := &entities.Project{
-		ClientID:				req.ClientId,
-		Country:				req.Country,
-		Budget:					req.Budget,
-		ServicesNeeded: 		services,
-		Status: 				req.Status,
-
+		ClientID:       req.ClientId,
+		Country:        req.Country,
+		Budget:         req.Budget,
+		ServicesNeeded: services,
+		Status:         req.Status,
 	}
 	return svc.Repo.InsertProject(ctx, project)
 }
@@ -44,21 +43,21 @@ func (svc *ProjectService) InsertProject(ctx context.Context, req *requests.Proj
 func (svc *ProjectService) UpdateProjectByID(ctx context.Context, projectID int, newProject *entities.Project) (*entities.Project, error) {
 	updates := map[string]interface{}{}
 
-    if newProject.Country != "" {
-        updates["country"] = newProject.Country
-    }
+	if newProject.Country != "" {
+		updates["country"] = newProject.Country
+	}
 
-    if newProject.Budget != 0 {
-        updates["budget"] = newProject.Budget
-    }
+	if newProject.Budget != 0 {
+		updates["budget"] = newProject.Budget
+	}
 
-    if len(newProject.ServicesNeeded) > 0 {
-        updates["services_needed"] = newProject.ServicesNeeded
-    }
+	if len(newProject.ServicesNeeded) > 0 {
+		updates["services_needed"] = newProject.ServicesNeeded
+	}
 
-    if newProject.Status != "" {
-        updates["status"] = newProject.Status
-    }
+	if newProject.Status != "" {
+		updates["status"] = newProject.Status
+	}
 
 	if len(updates) == 0 {
 		return nil, errors.New("no fields to update")

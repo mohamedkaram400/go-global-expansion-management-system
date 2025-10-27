@@ -8,7 +8,7 @@ import (
 
 // MockProjectRepo simulates ProjectRepository behavior
 type MockProjectRepo struct {
-	GetAllProjectsFunc       func(ctx context.Context, skip, limit int) ([]entities.Project, error)
+	GetAllProjectsFunc       func(ctx context.Context, skip, limit int) ([]*entities.Project, error)
 	GetByEmailFunc           func(ctx context.Context, email string) (*entities.Project, error)
 	InsertProjectFunc        func(ctx context.Context, project *entities.Project) (*entities.Project, error)
 	FindProjectByIDFunc      func(ctx context.Context, id int) (*entities.Project, error)
@@ -22,7 +22,7 @@ func (m *MockProjectRepo) InsertProject(ctx context.Context, Project *entities.P
 	return m.InsertProjectFunc(ctx, Project)
 }
 
-func (m *MockProjectRepo) GetAllProjects(ctx context.Context, skip, limit int) ([]entities.Project, error) {
+func (m *MockProjectRepo) GetAllProjects(ctx context.Context, skip, limit int) ([]*entities.Project, error) {
 	return m.GetAllProjectsFunc(ctx, skip, limit)
 }
 

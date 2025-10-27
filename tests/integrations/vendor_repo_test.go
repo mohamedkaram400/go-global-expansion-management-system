@@ -22,7 +22,7 @@ func TestGetAllVendors(t *testing.T) {
 	servicesJSON := convertServicesSliceToJSON(t)
 
 	// Seed test data
-	vendorsData := []entities.Vendor{
+	vendorsData := []*entities.Vendor{
 		{Name: "Google", CountriesSupported: datatypes.JSON(countriesJSON), ServicesOffered: datatypes.JSON(servicesJSON), Rating: 5.9, ResponseSlaHours: 4},
 		{Name: "Microsoft", CountriesSupported: datatypes.JSON(countriesJSON), ServicesOffered: datatypes.JSON(servicesJSON), Rating: 3.7, ResponseSlaHours: 3},
 		{Name: "ITWorks", CountriesSupported: datatypes.JSON(countriesJSON), ServicesOffered: datatypes.JSON(servicesJSON), Rating: 4.0, ResponseSlaHours: 5},
@@ -106,7 +106,6 @@ func TestDeleteVendor(t *testing.T) {
 	assert.Nil(t, found) // should not find the vendor
 }
 
-
 func seedVendor(t *testing.T, db *gorm.DB, name string) *entities.Vendor {
 	countriesJSON := convertCountriesSliceToJSON(t)
 	servicesJSON := convertServicesSliceToJSON(t)
@@ -122,8 +121,7 @@ func seedVendor(t *testing.T, db *gorm.DB, name string) *entities.Vendor {
 	return vendor
 }
 
-
-func convertCountriesSliceToJSON(t *testing.T) ([]byte) {
+func convertCountriesSliceToJSON(t *testing.T) []byte {
 
 	countries := []string{"USA", "KSA"}
 
@@ -135,9 +133,9 @@ func convertCountriesSliceToJSON(t *testing.T) ([]byte) {
 	return countriesJSON
 }
 
-func convertServicesSliceToJSON(t *testing.T) ([]byte) {
+func convertServicesSliceToJSON(t *testing.T) []byte {
 
-	services := []string{"legal","hiring"}
+	services := []string{"legal", "hiring"}
 
 	servicesJSON, err := json.Marshal(services)
 	if err != nil {

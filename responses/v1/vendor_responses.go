@@ -6,19 +6,17 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 )
 
-
 type VendorResponse struct {
-	ID                 int       `json:"id"`                 
-	Name               string    `json:"name"`
-	CountriesSupported []string  `json:"countries_supported"`
-	ServicesOffered    []string  `json:"services_offered"`
-	Rating             float64   `json:"rating"`
-	ResponseSlaHours   int       `json:"response_sla_hours"`
+	ID                 int      `json:"id"`
+	Name               string   `json:"name"`
+	CountriesSupported []string `json:"countries_supported"`
+	ServicesOffered    []string `json:"services_offered"`
+	Rating             float64  `json:"rating"`
+	ResponseSlaHours   int      `json:"response_sla_hours"`
 }
 
-
 func FormatVendor(vendor *entities.Vendor) VendorResponse {
-    var countries []string
+	var countries []string
 	var services []string
 
 	// Convert JSON to []string
@@ -35,10 +33,10 @@ func FormatVendor(vendor *entities.Vendor) VendorResponse {
 	}
 }
 
-func FormatVendors(vendors []entities.Vendor) []VendorResponse {
+func FormatVendors(vendors []*entities.Vendor) []VendorResponse {
 	responses := make([]VendorResponse, 0, len(vendors))
 	for _, v := range vendors {
-		responses = append(responses, FormatVendor(&v))
+		responses = append(responses, FormatVendor(v))
 	}
 	return responses
 }

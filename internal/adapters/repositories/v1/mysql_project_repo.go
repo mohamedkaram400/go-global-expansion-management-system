@@ -16,8 +16,8 @@ func NewProjectRepo(db *gorm.DB) *ProjectRepo {
 	return &ProjectRepo{DB: db}
 }
 
-func (r *ProjectRepo) GetAllProjects(ctx context.Context, skip int, limit int) ([]entities.Project, error) {
-	var projects []entities.Project
+func (r *ProjectRepo) GetAllProjects(ctx context.Context, skip int, limit int) ([]*entities.Project, error) {
+	var projects []*entities.Project
 	if err := r.DB.WithContext(ctx).
 		Offset(skip).
 		Limit(limit).
@@ -101,9 +101,9 @@ func (r *ProjectRepo) GetProjectCountries(ctx context.Context) (map[int]string, 
 }
 
 func (s *ProjectRepo) GetAllActiveProjects(ctx context.Context) ([]*entities.Project, error) {
-    var projects []*entities.Project
-    if err := s.DB.Where("status = ?", "active").Find(&projects).Error; err != nil {
-        return nil, err
-    }
-    return projects, nil
+	var projects []*entities.Project
+	if err := s.DB.Where("status = ?", "active").Find(&projects).Error; err != nil {
+		return nil, err
+	}
+	return projects, nil
 }

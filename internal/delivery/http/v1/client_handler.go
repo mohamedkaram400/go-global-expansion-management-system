@@ -52,7 +52,7 @@ func (h *ClientHandler) Show(c *gin.Context) {
 	idStr := c.Param("id")
 	clientID, _ := strconv.Atoi(idStr)
 
-	newClient, err := h.Service.FindClientByID(c, clientID)
+	newClient, err := h.Service.FindClientByID(c.Request.Context(), clientID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
@@ -139,5 +139,5 @@ func (h *ClientHandler) Destroy(c *gin.Context) {
         return
     }
 
-	c.JSON(http.StatusNoContent, nil)
+	c.Status(http.StatusNoContent)
 }

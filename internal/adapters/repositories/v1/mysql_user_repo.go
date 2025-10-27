@@ -16,15 +16,15 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 	return &UserRepo{DB: db}
 }
 
-func (r *UserRepo) GetAllUsers(ctx context.Context, skip int, limit int) ([]entities.User, error) {
-    var users []entities.User
-    if err := r.DB.WithContext(ctx).
-        Offset(skip).
-        Limit(limit).
-        Find(&users).Error; err != nil {
-        return nil, err
-    }
-    return users, nil
+func (r *UserRepo) GetAllUsers(ctx context.Context, skip int, limit int) ([]*entities.User, error) {
+	var users []*entities.User
+	if err := r.DB.WithContext(ctx).
+		Offset(skip).
+		Limit(limit).
+		Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *UserRepo) FindUserByID(ctx context.Context, userID int) (*entities.User, error) {
@@ -34,7 +34,7 @@ func (r *UserRepo) FindUserByID(ctx context.Context, userID int) (*entities.User
 		First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
-		} 
+		}
 		return nil, err
 	}
 	return &user, nil
@@ -64,22 +64,22 @@ func (r *UserRepo) UpdateUserByID(ctx context.Context, userID int, updates map[s
 
 	user := &entities.User{}
 
-    // Update the user
-    if err := r.DB.WithContext(ctx).
-        Model(user).
-        Where("id = ?", userID).
-        Updates(updates).Error; err != nil {
-        return nil, err
-    }
+	// Update the user
+	if err := r.DB.WithContext(ctx).
+		Model(user).
+		Where("id = ?", userID).
+		Updates(updates).Error; err != nil {
+		return nil, err
+	}
 
-    // Fetch the updated record
-    if err := r.DB.WithContext(ctx).
-        Where("id = ?", userID).
-        First(user).Error; err != nil {
-        return nil, err
-    }
+	// Fetch the updated record
+	if err := r.DB.WithContext(ctx).
+		Where("id = ?", userID).
+		First(user).Error; err != nil {
+		return nil, err
+	}
 
-    return user, nil
+	return user, nil
 }
 
 func (r *UserRepo) DeleteUserByID(ctx context.Context, userID int) (int, error) {

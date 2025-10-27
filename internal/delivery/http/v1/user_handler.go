@@ -43,7 +43,7 @@ func (h *UserHandler) Show(c *gin.Context) {
     idStr := c.Param("id")
 	UserID, _ := strconv.Atoi(idStr)
 
-	user, err := h.Service.FindUserByID(c, UserID)
+	user, err := h.Service.FindUserByID(c.Request.Context(), UserID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return

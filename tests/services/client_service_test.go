@@ -17,7 +17,7 @@ func TestFeatchAllClients(t *testing.T) {
 
 	t.Run("error: while fetching clients", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Client, error) {
+			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]*entities.Client, error) {
 				return nil, errors.New("database error")
 			},
 		}
@@ -33,8 +33,8 @@ func TestFeatchAllClients(t *testing.T) {
 
 	t.Run("successfully featched", func(t *testing.T) {
 		mockRepo := &mocks.MockClientRepo{
-			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Client, error) {
-				return []entities.Client{
+			GetAllClientsFunc: func(ctx context.Context, skip int, limit int) ([]*entities.Client, error) {
+				return []*entities.Client{
 					{ID: 1, CompanyName: "Test Co", ContactEmail: "a@test.com"},
 					{ID: 1, CompanyName: "Another Co", ContactEmail: "b@test.com"},
 				}, nil

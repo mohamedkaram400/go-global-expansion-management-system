@@ -45,7 +45,7 @@ func (h *VendorHandler) Show(c *gin.Context) {
     idStr := c.Param("id")
 	VendorID, _ := strconv.Atoi(idStr)
 
-	newVendor, err := h.Service.FindVendorByID(c, VendorID)
+	newVendor, err := h.Service.FindVendorByID(c.Request.Context(), VendorID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return

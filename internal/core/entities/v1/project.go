@@ -18,4 +18,4 @@ type Project struct {
 
 	ClientID int   			       `json:"client_id" gorm:"not null"`
     Client   Client 			   `gorm:"foreignKey:ClientID;references:ID"`
-}
+} 

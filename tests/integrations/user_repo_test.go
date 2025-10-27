@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/stretchr/testify/assert"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 )
 
 func TestGetAllUsers(t *testing.T) {
@@ -16,7 +16,7 @@ func TestGetAllUsers(t *testing.T) {
 	ctx := context.Background()
 
 	// Seed test data
-	usersData := []entities.User{
+	usersData := []*entities.User{
 		{Name: "User 1", Email: "user1@gmail.com"},
 		{Name: "User 2", Email: "user2@gmail.com"},
 		{Name: "User 3", Email: "user3@gmail.com"},
@@ -54,9 +54,9 @@ func TestInsertUser(t *testing.T) {
 	ctx := context.Background()
 
 	user := &entities.User{
-		Name:  		  "Ali",
-		Email: 		  "ali@example.com",
-		Password:     "secret",
+		Name:     "Ali",
+		Email:    "ali@example.com",
+		Password: "secret",
 	}
 
 	inserted, err := repo.InsertUser(ctx, user)
@@ -77,9 +77,9 @@ func TestUpdateUser(t *testing.T) {
 
 	// 1. Insert a user first to make sure it exists
 	user := &entities.User{
-		Name:  		"Ahmed",
-		Email: 		"ahmed@test.com",
-		Password:   "secret",
+		Name:     "Ahmed",
+		Email:    "ahmed@test.com",
+		Password: "secret",
 	}
 
 	inserted, err := repo.InsertUser(ctx, user)
@@ -87,9 +87,9 @@ func TestUpdateUser(t *testing.T) {
 	assert.NotNil(t, inserted)
 
 	updates := map[string]interface{}{
-		"name":          "Ahmed update",
-		"email": 		 "ahmed@update.com",
-		"password":      "secret1",
+		"name":     "Ahmed update",
+		"email":    "ahmed@update.com",
+		"password": "secret1",
 	}
 
 	updated, err := repo.UpdateUserByID(ctx, user.ID, updates)
@@ -110,9 +110,9 @@ func TestDeleteUser(t *testing.T) {
 
 	// 1. Insert a user first to make sure it exists
 	user := &entities.User{
-		Name:         "Ali",
-		Email: 		  "ali@test.com",
-		Password:     "secret",
+		Name:     "Ali",
+		Email:    "ali@test.com",
+		Password: "secret",
 	}
 	inserted, err := repo.InsertUser(ctx, user)
 	assert.NoError(t, err)

@@ -17,8 +17,8 @@ func NewMatchRepo(db *gorm.DB) *MatchRepo {
 	return &MatchRepo{DB: db}
 }
 
-func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.Project) ([]entities.Vendor, error) {
-	var vendors []entities.Vendor
+func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error) {
+	var vendors []*entities.Vendor
 
 	// Simplified example: filter by country first
 	if err := r.DB.WithContext(ctx).
@@ -41,8 +41,7 @@ func (r *MatchRepo) UpsertMatch(ctx context.Context, match *entities.Match) erro
 
 // SELECT * FROM vendors V INNER JOIN projects P WHERE P.country in V.countries_supported AND P.services_needed in V.services_offered;
 
-
-func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[string][]entities.VendorAnalytics, error) {
+func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[string][]*entities.VendorAnalytics, error) {
 	type Result struct {
 		Country       string
 		VendorID      int
@@ -75,9 +74,9 @@ func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[s
 	}
 
 	// Convert results into map[country][]Vendor
-	vendorMap := make(map[string][]entities.VendorAnalytics)
+	vendorMap := make(map[string][]*entities.VendorAnalytics)
 	for _, res := range results {
-		vendorMap[res.Country] = append(vendorMap[res.Country], entities.VendorAnalytics{
+		vendorMap[res.Country] = append(vendorMap[res.Country], &entities.VendorAnalytics{
 			ID:            res.VendorID,
 			Name:          res.VendorName,
 			AvgMatchScore: res.AvgMatchScore,

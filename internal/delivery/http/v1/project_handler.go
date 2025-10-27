@@ -53,7 +53,7 @@ func (h *ProjectHandler) Show(c *gin.Context) {
 	projectID := int(projectID64)
 
 
-	newProject, err := h.Service.FindProjectByID(c, projectID)
+	newProject, err := h.Service.FindProjectByID(c.Request.Context(), projectID)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return

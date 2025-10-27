@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/adapters/repositories/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/stretchr/testify/assert"
-	"github.com/mohamedkaram400/go-global-expansion-management-system/conn"
 )
 
 func TestGetAllClients(t *testing.T) {
@@ -16,7 +16,7 @@ func TestGetAllClients(t *testing.T) {
 	ctx := context.Background()
 
 	// Seed test data
-	clientsData := []entities.Client{
+	clientsData := []*entities.Client{
 		{CompanyName: "Client 1", ContactEmail: "client1@gmail.com"},
 		{CompanyName: "Client 2", ContactEmail: "client2@gmail.com"},
 		{CompanyName: "Client 3", ContactEmail: "client3@gmail.com"},

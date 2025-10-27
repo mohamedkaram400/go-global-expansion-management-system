@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
+
 	// "fmt"
 	"time"
 
@@ -18,8 +19,8 @@ func NewVendorRepo(db *gorm.DB) *VendorRepo {
 	return &VendorRepo{DB: db}
 }
 
-func (r *VendorRepo) GetAllVendors(ctx context.Context, skip int, limit int) ([]entities.Vendor, error) {
-	var vendors []entities.Vendor
+func (r *VendorRepo) GetAllVendors(ctx context.Context, skip int, limit int) ([]*entities.Vendor, error) {
+	var vendors []*entities.Vendor
 	if err := r.DB.WithContext(ctx).
 		Offset(skip).
 		Limit(limit).
@@ -50,12 +51,12 @@ func (r *VendorRepo) InsertVendor(ctx context.Context, vendor *entities.Vendor) 
 	}
 
 	// Insert vendor_status row
-    status := &entities.VendorStatus{
-        VendorID:       vendor.ID,
-        LastResponseAt: nil,            // no response yet
-        SlaExpired:     false,
-        CheckRunAt:     time.Now(),
-    }
+	status := &entities.VendorStatus{
+		VendorID:       vendor.ID,
+		LastResponseAt: nil, // no response yet
+		SlaExpired:     false,
+		CheckRunAt:     time.Now(),
+	}
 
 	if err := r.DB.WithContext(ctx).Create(status).Error; err != nil {
 		return nil, err
@@ -97,7 +98,7 @@ func (r *VendorRepo) DeleteVendorByID(ctx context.Context, vendorID int) (int, e
 
 // Flag expired SLAs
 func (s *VendorRepo) FlagExpiredSLAs(ctx context.Context) error {
-    res := s.DB.Exec(`
+	res := s.DB.Exec(`
         UPDATE vendor_statuses vs
 		JOIN vendors v
 		ON v.id = vs.vendor_id
@@ -108,7 +109,5 @@ func (s *VendorRepo) FlagExpiredSLAs(ctx context.Context) error {
           AND vs.last_response_at IS NOT NULL
           AND DATE_ADD(vs.last_response_at, INTERVAL v.response_sla_hours HOUR) < NOW()
     `)
-    return res.Error
+	return res.Error
 }
-
- 

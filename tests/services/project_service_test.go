@@ -19,7 +19,7 @@ func TestFeatchAllProjects(t *testing.T) {
 
 	t.Run("error: while fetching projects", func(t *testing.T) {
 		mockRepo := &mocks.MockProjectRepo{
-			GetAllProjectsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Project, error) {
+			GetAllProjectsFunc: func(ctx context.Context, skip int, limit int) ([]*entities.Project, error) {
 				return nil, errors.New("database error")
 			},
 		}
@@ -35,19 +35,19 @@ func TestFeatchAllProjects(t *testing.T) {
 
 	t.Run("successfully featched", func(t *testing.T) {
 		mockRepo := &mocks.MockProjectRepo{
-			GetAllProjectsFunc: func(ctx context.Context, skip int, limit int) ([]entities.Project, error) {
+			GetAllProjectsFunc: func(ctx context.Context, skip int, limit int) ([]*entities.Project, error) {
 
-				servicesNeeded := []string{"legal","hiring"}
+				servicesNeeded := []string{"legal", "hiring"}
 
 				servicesJSON, err := json.Marshal(servicesNeeded)
 				if err != nil {
 					t.Fatalf("failed to marshal servicesNeeded: %v", err)
 				}
 
-				return []entities.Project{
+				return []*entities.Project{
 					{Country: "Egypt", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3400},
-					{Country: "KSA", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3500},
-					{Country: "UAE", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3600},
+					{Country: "KSA", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3500},
+					{Country: "UAE", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "cancelled", Budget: 3600},
 				}, nil
 			},
 		}
@@ -113,8 +113,8 @@ func TestInsertProject(t *testing.T) {
 			},
 		}
 
-		servicesNeeded := []string{"legal","hiring"}
-				
+		servicesNeeded := []string{"legal", "hiring"}
+
 		svc := services.NewProjectService(mockRepo)
 		req := &requests.ProjectRequest{Country: "Egypt", ServicesNeeded: servicesNeeded, Status: "active", Budget: 3400}
 
@@ -141,7 +141,7 @@ func TestUpdateProjectByID(t *testing.T) {
 
 		svc := services.NewProjectService(mockRepo)
 
-		newProject := &entities.Project{Country: "UAE", Budget: 70000.0}	
+		newProject := &entities.Project{Country: "UAE", Budget: 70000.0}
 
 		project, err := svc.UpdateProjectByID(ctx, 1, newProject)
 
@@ -153,9 +153,9 @@ func TestUpdateProjectByID(t *testing.T) {
 		mockRepo := &mocks.MockProjectRepo{
 			UpdateProjectByIDFunc: func(ctx context.Context, ProjectID int, updates map[string]interface{}) (*entities.Project, error) {
 				return &entities.Project{
-					ID:           42,
-					Country:  updates["country"].(string),
-					Budget: updates["budget"].(float64),
+					ID:      42,
+					Country: updates["country"].(string),
+					Budget:  updates["budget"].(float64),
 				}, nil
 			},
 		}
@@ -225,10 +225,10 @@ func TestGetAllActiveProjects(t *testing.T) {
 	})
 
 	t.Run("active projects returned successfully", func(t *testing.T) {
-			mockRepo := &mocks.MockProjectRepo{
+		mockRepo := &mocks.MockProjectRepo{
 			GetAllActiveProjectsFunc: func(ctx context.Context) ([]*entities.Project, error) {
 
-				servicesNeeded := []string{"legal","hiring"}
+				servicesNeeded := []string{"legal", "hiring"}
 
 				servicesJSON, err := json.Marshal(servicesNeeded)
 				if err != nil {
@@ -237,8 +237,8 @@ func TestGetAllActiveProjects(t *testing.T) {
 
 				return []*entities.Project{
 					{Country: "Egypt", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3400},
-					{Country: "KSA", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
-					{Country: "UAE", ServicesNeeded:   datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
+					{Country: "KSA", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3500},
+					{Country: "UAE", ServicesNeeded: datatypes.JSON(servicesJSON), Status: "active", Budget: 3600},
 				}, nil
 			},
 		}
