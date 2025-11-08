@@ -35,7 +35,7 @@ func TestGetVendorsForProject(t *testing.T) {
 
 	result, err := repo.GetVendorsForProject(ctx, project)
 
-	t.Logf("Result: %+v", result)
+	// t.Logf("Result: %+v", result)
 	
 	// Assertions
 	assert.NoError(t, err)
@@ -126,3 +126,71 @@ func TestGetTopVendorsByCountry(t *testing.T) {
 	assert.Equal(t, "VendorB", uaeVendors[0].Name)
 }
 
+func TestUpsertMatch(t *testing.T) {
+	db := conn.SetupTestDB()
+	repo := repositories.NewMatchRepo(db)
+	ctx := context.Background()
+
+	// --- Step 1: Prepare related data (client → project → vendor) ---
+	client := entities.Client{CompanyName: "Test Client"}
+	db.Create(&client)
+
+	project := entities.Project{
+		Country:         "KSA",
+		ServicesNeeded:  datatypes.JSON([]byte(`["Consulting"]`)),
+		Budget:          10000,
+		Status:          "active",
+		ClientID:        client.ID,
+	}
+	db.Create(&project)
+
+	vendor := entities.Vendor{Name: "VendorA"}
+	db.Create(&vendor)
+
+
+	// --- Step 2: Create a new match ---
+	initialMatch := &entities.Match{
+		ProjectID: project.ID,
+		VendorID: vendor.ID,
+		Score: 90,
+	}
+
+	err := repo.UpsertMatch(ctx, initialMatch)
+
+	// t.Logf("Inserted Match: ProjectID=%d, VendorID=%d, Score=%.2f", initialMatch.ProjectID, initialMatch.VendorID, initialMatch.Score)
+	// t.Logf("Vendor: ID=%d, Name=%s", vendor.ID, vendor.Name)
+	// t.Logf("Project: ID=%d, Country=%s, Budget=%.2f", project.ID, project.Country, project.Budget)
+
+	assert.NoError(t, err, "should insert match without error")
+
+
+	// --- Step 3: Verify match was inserted ---
+	var matchInDB entities.Match
+	err = db.First(&matchInDB, "project_id = ? AND vendor_id = ?", project.ID, vendor.ID).Error
+	assert.NoError(t, err)
+	assert.Equal(t, 90.0, matchInDB.Score)
+
+	
+	// --- Step 4: Call again with same (project_id, vendor_id) but new score ---
+	updatedMatch := &entities.Match{
+		ProjectID: project.ID,
+		VendorID:  vendor.ID,
+		Score:     95,
+	}
+
+	err = repo.UpsertMatch(ctx, updatedMatch)
+	assert.NoError(t, err, "should update existing match")
+
+
+	// --- Step 5: Verify the score got updated ---
+	var updated entities.Match
+	err = db.First(&updated, "project_id = ? AND vendor_id = ?", project.ID, vendor.ID).Error
+	assert.NoError(t, err)
+	assert.Equal(t, 95.0, updated.Score, "score should be updated from 90 to 95")
+
+
+	// --- Step 6: Sanity check: only one record should exist ---
+	var count int64
+	db.Model(&entities.Match{}).Count(&count)
+	assert.Equal(t, int64(1), count, "should not duplicate match records")
+}
