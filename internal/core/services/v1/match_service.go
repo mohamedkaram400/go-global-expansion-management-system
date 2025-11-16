@@ -13,13 +13,13 @@ import (
 )
 
 type MatchService struct {
-	MatchRepo ports.MatchRepository
-	ProjectService *ProjectService
-	Notifier ports.Notifier
-	ClientService *ClientService
+	MatchRepo      ports.MatchRepository
+    ProjectService ports.ProjectService
+    Notifier       ports.Notifier
+    ClientService  ports.ClientService
 }
 
-func NewMatchService(repo ports.MatchRepository, projectService *ProjectService, notifier ports.Notifier, clientService *ClientService) *MatchService {
+func NewMatchService(repo ports.MatchRepository, projectService ports.ProjectService, notifier ports.Notifier, clientService ports.ClientService) *MatchService {
 	return &MatchService{MatchRepo: repo, ProjectService: projectService, Notifier: notifier, ClientService: clientService}
 }
 
@@ -31,7 +31,7 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 		return nil, err
 	}
  
-	// fmt.Println(project)
+	// fmt.Println(project) 
 
 	// 2. Parse JSON []byte → []string
 	var projectServices []string
@@ -128,7 +128,7 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 		}()
 	}
 
-	fmt.Println("Matchs: ", matchResponses)
+	// fmt.Println("Matchs: ", matchResponses)
 
 	return matchResponses, nil
 }
