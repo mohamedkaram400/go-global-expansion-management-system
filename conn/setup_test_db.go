@@ -40,6 +40,8 @@ func SetupTestDB() *gorm.DB {
 		log.Fatalf("❌ failed to connect to test DB: %v", err)
 	}
 
+	log.Println("TEST DB PATH:", dbPath)
+
 	models := []interface{}{
 		&entities.User{},
 		&entities.Client{},
@@ -58,3 +60,5 @@ func SetupTestDB() *gorm.DB {
 	TestDB = db // Save it globally if needed later
 	return db
 }
+
+// Url:  /home/mohamed-karam/Projects/go-expansion/tests/tmp/my_test_database.db
