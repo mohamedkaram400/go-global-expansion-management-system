@@ -15,13 +15,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    environment:
-      APP_NAME: App
-      DB_HOST: expansion-mysql
-      DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - expansion
     healthcheck:
@@ -36,7 +29,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - /home/mohamed-karam/Projects/go-expansion/deploy/nginx/conf.d:/etc/nginx/conf.d
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
     networks:
@@ -45,25 +38,22 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 3 
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: expansion-mysql
     ports:
       - "3309:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    command: >
-      --server-id=1
-      --log-bin=mysql-bin
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - expansion
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pqazwsx"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pqazwsx123"]
       interval: 5s
       timeout: 10s
       retries: 5

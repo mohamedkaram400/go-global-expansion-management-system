@@ -1,32 +1,27 @@
 # ---------- Build stage ----------
 FROM golang:1.24-alpine AS builder
 
-# Disable CGO and build static binary
-ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+ENV CGO_ENABLED=0
 
 WORKDIR /build
 
-# Copy dependency files
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source
 COPY . .
 
-# Build binary from cmd/main.go
-RUN go build -o main ./cmd/main.go && ls -lh /build
+RUN go build -o main ./cmd/main.go
+
 
 # ---------- Runtime stage ----------
-FROM alpine:3.21 AS final
+FROM alpine:3.21
+
+RUN apk add --no-cache curl
 
 WORKDIR /app
 
-# Copy binary from builder
 COPY --from=builder /build/main .
-COPY ../.env.docker .env
 
-# Expose app port (your app listens on 9000)
 EXPOSE 9000
 
-# Run the binary
 CMD ["./main"]
