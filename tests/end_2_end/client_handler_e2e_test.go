@@ -50,10 +50,37 @@ func TestGetAllClients(t *testing.T) {
 func TestGetClientById(t *testing.T) {
 	router := setupClientRouter()
 
-	req, _ := http.NewRequest("GET", "/clients/2", nil)
+	email := fmt.Sprintf("test_%d@example.com", time.Now().UnixNano())
 
+	body := map[string]string{
+		"company_name":  "Test Company",
+		"contact_email": email,
+		"password":      "qazwsx123",
+	}
+	jsonBody, _ := json.Marshal(body)
+
+	// Create client
+	createReq, _ := http.NewRequest("POST", "/clients", bytes.NewBuffer(jsonBody))
+	createReq.Header.Set("Content-Type", "application/json")
+	createResp := httptest.NewRecorder()
+	router.ServeHTTP(createResp, createReq)
+
+	
+	// Parse response to get the new client ID
+	var createRespBody map[string]interface{}
+	err := json.Unmarshal(createResp.Body.Bytes(), &createRespBody)
+	if err != nil {
+		t.Fatalf("Failed to parse create response: %v", err)
+	}
+
+	// Assuming your JSON structure is: {"id": 1, ...} or {"data": {"id": 1, ...}}
+	clientData := createRespBody["data"].(map[string]interface{}) // if nested under "data"
+	clientID := fmt.Sprintf("%v", clientData["id"])
+
+	// Get client by ID
+	showReq, _ := http.NewRequest("GET", "/clients/"+clientID, nil)
 	resp := httptest.NewRecorder()
-	router.ServeHTTP(resp, req)
+	router.ServeHTTP(resp, showReq)
 
 	assert.Equal(t, http.StatusOK, resp.Code)
 }
