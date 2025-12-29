@@ -145,6 +145,8 @@ Content-Type: application/json
 ## 📚 Endpoint Collection
 The full list of API endpoints is included in the project’s main directory for easy reference and testing.
 
-## 📜 License
-This project is licensed under the MIT License — see the LICENSE
-file for details.
+---
+
+## 🛡️ License
+
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and share this project with proper attribution.
