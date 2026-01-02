@@ -3,4 +3,4 @@
 /tmp/*
 deploy/.env
 vendor
- 
+/tests/tmp/my_test_database.db
