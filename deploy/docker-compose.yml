@@ -27,7 +27,7 @@ services:
     image: nginx:alpine
     container_name: expansion-nginx
     ports:
-      - "80:80"
+      - "8082:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
