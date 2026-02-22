@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
@@ -27,9 +26,8 @@ type Config struct {
 }
 
 func LoadConfig() *Config { 
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("⚠️ No .env file found, reading from environment")
+	if os.Getenv("APP_ENV") != "production" {
+		_ = godotenv.Load()
 	}
 
 	rateInt, _ := strconv.Atoi(os.Getenv("RATE_NUMBER"))

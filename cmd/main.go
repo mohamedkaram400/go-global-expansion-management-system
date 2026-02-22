@@ -29,9 +29,13 @@ func main() {
 
 	// 2. Connect to MySQL
 	mysql, err := conn.ConnectMySQL(config.MySQLURI)
-	sqlDB, _ := mysql.DB()
 	if err != nil {
 		log.Fatal("❌ Failed to connect MySQL:", err)
+	}
+
+	sqlDB, err := mysql.DB()
+	if err != nil {
+		log.Fatal("❌ Failed to get sql.DB:", err)
 	}
 
 	// 3. Connect to SQLite (for testing)
