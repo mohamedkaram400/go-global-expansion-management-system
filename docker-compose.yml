@@ -76,8 +76,8 @@ services:
     image: mongodb/mongodb-community-server:6.0-ubi8
     container_name: mongodb-expansion
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=pass
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     env_file:
       - .env
     ports:
@@ -87,7 +87,7 @@ services:
     networks:
       - expansion
     healthcheck:
-      test: ["CMD", "mongosh", "--username", "user", "--password", "pass", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--username", "${MONGO_INITDB_ROOT_USERNAME}", "--password", "${MONGO_INITDB_ROOT_PASSWORD}", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 10s
       retries: 5
