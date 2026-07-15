@@ -120,7 +120,7 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 			if err := svc.Notifier.SendMatchNotification(context.Background(), notif); err != nil {
 				log.Printf("email send error: %v", err)
 			} else {
-				log.Println(">>> email sent OK")
+				log.Println(">>> email sent OK") 
 			}
 		    // Add delay
 	        time.Sleep(1 * time.Second)

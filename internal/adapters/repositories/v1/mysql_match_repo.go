@@ -20,11 +20,20 @@ func NewMatchRepo(db *gorm.DB) *MatchRepo {
 func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error) {
 	var vendors []*entities.Vendor
 	
-	// Simplified example: filter by country first
-	if err := r.DB.WithContext(ctx).
-		Where("EXISTS (SELECT 1 FROM json_each(countries_supported) WHERE value = ?)", project.Country).
-		Find(&vendors).Error; err != nil {
-		return nil, err
+	fmt.Println(project.Country)
+	if r.DB.Dialector.Name() == "sqlite" {
+		// Simplified example: filter by country first
+		if err := r.DB.WithContext(ctx).
+			Where("EXISTS (SELECT 1 FROM json_each(countries_supported) WHERE value = ?)", project.Country).
+			Find(&vendors).Error; err != nil {
+			return nil, err
+		} 
+	} else {
+		if err := r.DB.WithContext(ctx).
+			Where("JSON_CONTAINS(countries_supported, JSON_QUOTE(?))", project.Country).
+			Find(&vendors).Error; err != nil {
+			return nil, err
+		}
 	}
 
 	// fmt.Printf("✅ Project retruned: %+v\n", vendors) // debug

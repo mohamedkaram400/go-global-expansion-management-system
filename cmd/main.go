@@ -49,7 +49,7 @@ func main() {
 	if err != nil {
 		log.Fatal("❌ Failed to connect Mongo:", err)
 	}
-	researchDocumentsollection := mongo.Database(config.DBName).Collection(config.CollectionName)
+	researchDocumentCollection := mongo.Database(config.DBName).Collection(config.CollectionName)
 
 	// 5. Connect to Redis
 	redisClient, err := conn.ConnectRedis(config.RedisHost)
@@ -130,7 +130,7 @@ func main() {
 	matchHandler := http.NewMatchHandler(matchService)
 
 	// Research Document Module with (Mongo DB)
-	researchDocumentRepo := repositories.NewResearchDocumentRepo(researchDocumentsollection)
+	researchDocumentRepo := repositories.NewResearchDocumentRepo(researchDocumentCollection)
 	researchDocumentService := services.NewResearchDocumentService(researchDocumentRepo)
 	researchDocumentHandler := http.NewResearchDocumentHandler(researchDocumentService, projectService)
 
