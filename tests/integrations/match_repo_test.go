@@ -36,7 +36,7 @@ func TestGetVendorsForProject(t *testing.T) {
 	result, err := repo.GetVendorsForProject(ctx, project)
 
 	// t.Logf("Result: %+v", result)
-	
+
 	// Assertions
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
@@ -65,25 +65,25 @@ func TestGetTopVendorsByCountry(t *testing.T) {
 
 	projects := []entities.Project{
 		{
-			Country:         "KSA",
-			ServicesNeeded:  datatypes.JSON([]byte(`["IT Consulting"]`)),
-			Budget:          10000,
-			Status:          "active",
-			ClientID:        client.ID,
+			Country:        "KSA",
+			ServicesNeeded: datatypes.JSON([]byte(`["IT Consulting"]`)),
+			Budget:         10000,
+			Status:         "active",
+			ClientID:       client.ID,
 		},
 		{
-			Country:         "KSA",
-			ServicesNeeded:  datatypes.JSON([]byte(`["Cloud Hosting"]`)),
-			Budget:          15000,
-			Status:          "active",
-			ClientID:        client.ID,
+			Country:        "KSA",
+			ServicesNeeded: datatypes.JSON([]byte(`["Cloud Hosting"]`)),
+			Budget:         15000,
+			Status:         "active",
+			ClientID:       client.ID,
 		},
 		{
-			Country:         "UAE",
-			ServicesNeeded:  datatypes.JSON([]byte(`["Data Analysis"]`)),
-			Budget:          20000,
-			Status:          "active",
-			ClientID:        client.ID,
+			Country:        "UAE",
+			ServicesNeeded: datatypes.JSON([]byte(`["Data Analysis"]`)),
+			Budget:         20000,
+			Status:         "active",
+			ClientID:       client.ID,
 		},
 	}
 
@@ -91,7 +91,7 @@ func TestGetTopVendorsByCountry(t *testing.T) {
 		db.Create(&projects[i])
 	}
 
-	now := time.Now()   
+	now := time.Now()
 	matches := []entities.Match{
 		{ProjectID: projects[0].ID, VendorID: vendors[0].ID, Score: 90, CreatedAt: now},
 		{ProjectID: projects[0].ID, VendorID: vendors[1].ID, Score: 75, CreatedAt: now},
@@ -136,23 +136,22 @@ func TestUpsertMatch(t *testing.T) {
 	db.Create(&client)
 
 	project := entities.Project{
-		Country:         "KSA",
-		ServicesNeeded:  datatypes.JSON([]byte(`["Consulting"]`)),
-		Budget:          10000,
-		Status:          "active",
-		ClientID:        client.ID,
+		Country:        "KSA",
+		ServicesNeeded: datatypes.JSON([]byte(`["Consulting"]`)),
+		Budget:         10000,
+		Status:         "active",
+		ClientID:       client.ID,
 	}
 	db.Create(&project)
 
 	vendor := entities.Vendor{Name: "VendorA"}
 	db.Create(&vendor)
 
-
 	// --- Step 2: Create a new match ---
 	initialMatch := &entities.Match{
 		ProjectID: project.ID,
-		VendorID: vendor.ID,
-		Score: 90,
+		VendorID:  vendor.ID,
+		Score:     90,
 	}
 
 	err := repo.UpsertMatch(ctx, initialMatch)
@@ -163,14 +162,12 @@ func TestUpsertMatch(t *testing.T) {
 
 	assert.NoError(t, err, "should insert match without error")
 
-
 	// --- Step 3: Verify match was inserted ---
 	var matchInDB entities.Match
 	err = db.First(&matchInDB, "project_id = ? AND vendor_id = ?", project.ID, vendor.ID).Error
 	assert.NoError(t, err)
 	assert.Equal(t, 90.0, matchInDB.Score)
 
-	
 	// --- Step 4: Call again with same (project_id, vendor_id) but new score ---
 	updatedMatch := &entities.Match{
 		ProjectID: project.ID,
@@ -181,13 +178,11 @@ func TestUpsertMatch(t *testing.T) {
 	err = repo.UpsertMatch(ctx, updatedMatch)
 	assert.NoError(t, err, "should update existing match")
 
-
 	// --- Step 5: Verify the score got updated ---
 	var updated entities.Match
 	err = db.First(&updated, "project_id = ? AND vendor_id = ?", project.ID, vendor.ID).Error
 	assert.NoError(t, err)
 	assert.Equal(t, 95.0, updated.Score, "score should be updated from 90 to 95")
-
 
 	// --- Step 6: Sanity check: only one record should exist ---
 	var count int64

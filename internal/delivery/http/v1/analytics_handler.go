@@ -21,12 +21,12 @@ func (h *AnalyticsHandler) GenerateAnalytics(c *gin.Context) {
 	analytics, err := h.AnalyticsService.GenerateAnalytics(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return 
+		return
 	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Top vendors analytics retrieved successfully",
-		Data: analytics,
+		Data:    analytics,
 	}
 
 	c.JSON(http.StatusOK, response)

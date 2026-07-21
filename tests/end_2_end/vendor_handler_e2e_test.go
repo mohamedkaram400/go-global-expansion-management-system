@@ -50,7 +50,7 @@ func TestCreateVendor(t *testing.T) {
 	body := map[string]interface{}{
 		"name":                "ITHelper",
 		"countries_supported": []string{"KSA", "UAE"},
-    	"services_offered":    []string{"hiring"},
+		"services_offered":    []string{"hiring"},
 		"rating":              4.5,
 		"response_sla_hours":  3,
 	}
@@ -76,30 +76,30 @@ func TestGetVendorById(t *testing.T) {
 	router := setupVendorRouter()
 
 	createBody := map[string]interface{}{
-        "name":                "ITWorks",
-        "countries_supported": []string{"Egypt", "UAE"},
-        "services_offered":    []string{"hr"},
-        "rating":              4.5,
-        "response_sla_hours":  3,
-    }
+		"name":                "ITWorks",
+		"countries_supported": []string{"Egypt", "UAE"},
+		"services_offered":    []string{"hr"},
+		"rating":              4.5,
+		"response_sla_hours":  3,
+	}
 
-    jsonCreate, _ := json.Marshal(createBody)
+	jsonCreate, _ := json.Marshal(createBody)
 
-    req, _ := http.NewRequest("POST", "/vendors", bytes.NewBuffer(jsonCreate))
-    req.Header.Set("Content-Type", "application/json")
+	req, _ := http.NewRequest("POST", "/vendors", bytes.NewBuffer(jsonCreate))
+	req.Header.Set("Content-Type", "application/json")
 
-    respCreate := httptest.NewRecorder()
-    router.ServeHTTP(respCreate, req)
+	respCreate := httptest.NewRecorder()
+	router.ServeHTTP(respCreate, req)
 
-    t.Log("Create response:", respCreate.Body.String())
-    assert.Equal(t, http.StatusCreated, respCreate.Code)
+	t.Log("Create response:", respCreate.Body.String())
+	assert.Equal(t, http.StatusCreated, respCreate.Code)
 
 	// Now GET
-    req, _ = http.NewRequest("GET", "/vendors/1", nil)
-    resp := httptest.NewRecorder()
-    router.ServeHTTP(resp, req)
+	req, _ = http.NewRequest("GET", "/vendors/1", nil)
+	resp := httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
 
-    assert.Equal(t, http.StatusOK, resp.Code)
+	assert.Equal(t, http.StatusOK, resp.Code)
 }
 
 func TestUpdateVendor(t *testing.T) {
@@ -109,7 +109,7 @@ func TestUpdateVendor(t *testing.T) {
 	createBody := map[string]interface{}{
 		"name":                "ITWorks",
 		"countries_supported": []string{"Egypt", "UAE"},
-    	"services_offered":    []string{"hr"},
+		"services_offered":    []string{"hr"},
 		"rating":              4.5,
 		"response_sla_hours":  3,
 	}
@@ -134,8 +134,8 @@ func TestUpdateVendor(t *testing.T) {
 	// Update request
 	updateBody := map[string]interface{}{
 		"name":                "ITWorks",
-	    "countries_supported": []string{"Egypt", "UAE"},
-    	"services_offered":    []string{"hr"},
+		"countries_supported": []string{"Egypt", "UAE"},
+		"services_offered":    []string{"hr"},
 		"rating":              2,
 		"response_sla_hours":  5,
 	}
@@ -170,7 +170,7 @@ func TestVendorHandler_EndToEnd(t *testing.T) {
 	createBody := map[string]interface{}{
 		"name":                "ITWorks",
 		"countries_supported": []string{"Egypt", "UAE"},
-    	"services_offered":    []string{"hr"},
+		"services_offered":    []string{"hr"},
 		"rating":              4.5,
 		"response_sla_hours":  3,
 	}
@@ -210,7 +210,7 @@ func TestVendorHandler_EndToEnd(t *testing.T) {
 	updateBody := map[string]interface{}{
 		"name":                "ITHelper",
 		"countries_supported": []string{"KSA", "UAE"},
-    	"services_offered":    []string{"hiring"},
+		"services_offered":    []string{"hiring"},
 		"rating":              4.5,
 		"response_sla_hours":  3,
 	}

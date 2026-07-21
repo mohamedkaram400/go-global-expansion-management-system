@@ -7,7 +7,6 @@ import (
 	"github.com/mohamedkaram400/go-global-expansion-management-system/requests/v1"
 )
 
-
 type MockProjectService struct {
 	GetAllProjectsFunc       func(ctx context.Context, skip, limit int) ([]*entities.Project, error)
 	GetByEmailFunc           func(ctx context.Context, email string) (*entities.Project, error)

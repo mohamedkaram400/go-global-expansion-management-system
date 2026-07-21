@@ -77,7 +77,7 @@ func TestFindVendorByID(t *testing.T) {
 			FindVendorByIDFunc: func(ctx context.Context, vendorID int) (*entities.Vendor, error) {
 				return seedVendor(t, "ITWorks"), nil
 			},
-		} 
+		}
 
 		svc := services.NewVendorService(mockRepo)
 
@@ -101,7 +101,7 @@ func TestInsertVendor(t *testing.T) {
 			},
 		}
 
-		servicesArr := []string{"legal","hiring"}
+		servicesArr := []string{"legal", "hiring"}
 		countriesArr := []string{"USA", "KSA"}
 
 		svc := services.NewVendorService(mockRepo)
@@ -122,7 +122,7 @@ func TestInsertVendor(t *testing.T) {
 			},
 		}
 
-		servicesArr := []string{"legal","hiring"}
+		servicesArr := []string{"legal", "hiring"}
 		countriesArr := []string{"USA", "KSA"}
 
 		svc := services.NewVendorService(mockRepo)
@@ -165,12 +165,12 @@ func TestUpdateVendorByID(t *testing.T) {
 	})
 
 	t.Run("successfully updated", func(t *testing.T) {
-			mockRepo := &mocks.MockVendorRepo{
+		mockRepo := &mocks.MockVendorRepo{
 			UpdateVendorByIDFunc: func(ctx context.Context, vendorID int, updates map[string]interface{}) (*entities.Vendor, error) {
 				return &entities.Vendor{
-					ID:       vendorID,
-					Name:     updates["name"].(string),
-					Rating:   updates["rating"].(float64),
+					ID:     vendorID,
+					Name:   updates["name"].(string),
+					Rating: updates["rating"].(float64),
 				}, nil
 			},
 		}
@@ -300,7 +300,7 @@ func seedVendor(t *testing.T, name string) *entities.Vendor {
 	return vendor
 }
 
-func convertCountriesSliceToJSON(t *testing.T) ([]byte) {
+func convertCountriesSliceToJSON(t *testing.T) []byte {
 
 	countries := []string{"USA", "KSA"}
 
@@ -312,9 +312,9 @@ func convertCountriesSliceToJSON(t *testing.T) ([]byte) {
 	return countriesJSON
 }
 
-func convertServicesSliceToJSON(t *testing.T) ([]byte) {
+func convertServicesSliceToJSON(t *testing.T) []byte {
 
-	services := []string{"legal","hiring"}
+	services := []string{"legal", "hiring"}
 
 	servicesJSON, err := json.Marshal(services)
 	if err != nil {

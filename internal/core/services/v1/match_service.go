@@ -14,9 +14,9 @@ import (
 
 type MatchService struct {
 	MatchRepo      ports.MatchRepository
-    ProjectService ports.ProjectService
-    Notifier       ports.Notifier
-    ClientService  ports.ClientService
+	ProjectService ports.ProjectService
+	Notifier       ports.Notifier
+	ClientService  ports.ClientService
 }
 
 func NewMatchService(repo ports.MatchRepository, projectService ports.ProjectService, notifier ports.Notifier, clientService ports.ClientService) *MatchService {
@@ -30,8 +30,8 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 	if err != nil {
 		return nil, err
 	}
- 
-	// fmt.Println(project) 
+
+	// fmt.Println(project)
 
 	// 2. Parse JSON []byte → []string
 	var projectServices []string
@@ -39,13 +39,12 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 		return nil, fmt.Errorf("failed to parse services_needed: %w", err)
 	}
 
-
 	// 3. Get all vendors that apply rules
 	vendors, err := svc.MatchRepo.GetVendorsForProject(ctx, project)
 	if err != nil {
 		return nil, err
 	}
- 
+
 	// fmt.Println(project, vendors)
 
 	// 4. Init object for response with length of vendors matches
@@ -77,11 +76,10 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 			Score:     score,
 		}
 
-		// 9. Save match result with socre in matches table 
+		// 9. Save match result with socre in matches table
 		if err := svc.MatchRepo.UpsertMatch(ctx, &match); err != nil {
 			return nil, err
 		}
-
 
 		// 10. Build clean response
 		resp := responses.MatchResponse{
@@ -116,14 +114,14 @@ func (svc *MatchService) Rebuild(ctx context.Context, projectID int) ([]response
 			}
 
 			fmt.Println("notif:", notif)
-			
+
 			if err := svc.Notifier.SendMatchNotification(context.Background(), notif); err != nil {
 				log.Printf("email send error: %v", err)
 			} else {
-				log.Println(">>> email sent OK") 
+				log.Println(">>> email sent OK")
 			}
-		    // Add delay
-	        time.Sleep(1 * time.Second)
+			// Add delay
+			time.Sleep(1 * time.Second)
 
 		}()
 	}
@@ -148,4 +146,3 @@ func countOverlap(projectServices, vendorServices []string) int {
 	}
 	return count
 }
-

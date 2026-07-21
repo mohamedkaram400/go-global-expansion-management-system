@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
- 
+
 type MatchRepo struct {
 	DB *gorm.DB
 }
@@ -19,7 +19,7 @@ func NewMatchRepo(db *gorm.DB) *MatchRepo {
 
 func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error) {
 	var vendors []*entities.Vendor
-	
+
 	fmt.Println(project.Country)
 	if r.DB.Dialector.Name() == "sqlite" {
 		// Simplified example: filter by country first
@@ -27,7 +27,7 @@ func (r *MatchRepo) GetVendorsForProject(ctx context.Context, project *entities.
 			Where("EXISTS (SELECT 1 FROM json_each(countries_supported) WHERE value = ?)", project.Country).
 			Find(&vendors).Error; err != nil {
 			return nil, err
-		} 
+		}
 	} else {
 		if err := r.DB.WithContext(ctx).
 			Where("JSON_CONTAINS(countries_supported, JSON_QUOTE(?))", project.Country).
@@ -122,7 +122,6 @@ func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[s
 	return vendorMap, nil
 }
 
-
 // func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[string][]*entities.VendorAnalytics, error) {
 // 	type Result struct {
 // 		Country       string
@@ -137,7 +136,7 @@ func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[s
 // 	if r.DB.Dialector.Name() == "sqlite" {
 // 		query = `
 // 			SELECT country, vendor_id, vendor_name, avg_match_score FROM (
-// 				SELECT 
+// 				SELECT
 // 					p.country,
 // 					v.id AS vendor_id,
 // 					v.name AS vendor_name,
@@ -155,7 +154,7 @@ func (r *MatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[s
 // 		// MySQL version
 // 		query = `
 // 			SELECT country, vendor_id, vendor_name, avg_match_score FROM (
-// 				SELECT 
+// 				SELECT
 // 					p.country,
 // 					v.id AS vendor_id,
 // 					v.name AS vendor_name,

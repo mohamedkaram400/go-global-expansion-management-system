@@ -24,7 +24,7 @@ func setupUserRouter() *gin.Engine {
 	db := conn.SetupTestDB()
 	userRepo := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepo)
-	userHandler := handlers.NewUserHandler(userService) 
+	userHandler := handlers.NewUserHandler(userService)
 
 	r := gin.Default()
 	r.GET("/users", userHandler.Index)
@@ -61,9 +61,9 @@ func TestCreateUser(t *testing.T) {
 	router := setupUserRouter()
 
 	body := map[string]string{
-		"name":  	"Ali",
-		"email": 	"ali_" + uuid.NewString() + "@example.com",
-		"Role":	    "Support",
+		"name":     "Ali",
+		"email":    "ali_" + uuid.NewString() + "@example.com",
+		"Role":     "Support",
 		"password": "qazwsx123",
 	}
 	jsonBody, _ := json.Marshal(body)
@@ -78,7 +78,7 @@ func TestCreateUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Ali")
-	
+
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -86,14 +86,13 @@ func TestUpdateUser(t *testing.T) {
 
 	// First, create a user to update
 	createBody := map[string]interface{}{
-		"name":  		"Ahmed",
-		"email": 		"ali_" + uuid.NewString() + "@example.com",
-		"Role":		    "Support",
-		"password":     "secret",
+		"name":     "Ahmed",
+		"email":    "ali_" + uuid.NewString() + "@example.com",
+		"Role":     "Support",
+		"password": "secret",
 	}
 
 	jsonCreate, _ := json.Marshal(createBody)
-
 
 	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(jsonCreate))
 	req.Header.Set("Content-Type", "application/json")
@@ -113,14 +112,13 @@ func TestUpdateUser(t *testing.T) {
 
 	data := created["data"].(map[string]interface{})
 	id := int(data["id"].(float64))
-	
 
 	// Update request
 	updateBody := map[string]interface{}{
-		"name":  		"Ali",
-		"email": 		"ali_" + uuid.NewString() + "@example.com",
-		"Role":	        "Support",
-		"password":     "secret",
+		"name":     "Ali",
+		"email":    "ali_" + uuid.NewString() + "@example.com",
+		"Role":     "Support",
+		"password": "secret",
 	}
 
 	jsonUpdate, _ := json.Marshal(updateBody)
@@ -142,7 +140,7 @@ func TestDeleteUser(t *testing.T) {
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
-	
+
 	assert.Equal(t, http.StatusNoContent, resp.Code)
 }
 
@@ -170,7 +168,6 @@ func TestUserHandler_EndToEnd(t *testing.T) {
 	data := createResp["data"].(map[string]interface{})
 	id := int(data["id"].(float64))
 
-
 	// ---- 2. INDEX ----
 	req, _ = http.NewRequest("GET", "/users?skip=0&limit=10", nil)
 	resp = httptest.NewRecorder()
@@ -178,14 +175,12 @@ func TestUserHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Ali")
 
-
 	// ---- 3. SHOW ----
 	req, _ = http.NewRequest("GET", "/users/"+strconv.Itoa(id), nil)
 	resp = httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Ali")
-
 
 	// ---- 4. UPDATE ----
 	updateBody := map[string]interface{}{
@@ -203,7 +198,6 @@ func TestUserHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Ali Updated")
 
-	
 	// ---- 5. DELETE ----
 	req, _ = http.NewRequest("DELETE", "/users/"+strconv.Itoa(id), nil)
 	resp = httptest.NewRecorder()

@@ -5,20 +5,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/v1/auth"
 	services "github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1/auth"
+	middlewares "github.com/mohamedkaram400/go-global-expansion-management-system/internal/delivery/middlewares/v1/auth"
 	requests "github.com/mohamedkaram400/go-global-expansion-management-system/requests/v1/auth"
 	responses "github.com/mohamedkaram400/go-global-expansion-management-system/responses/v1/auth"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/responses/v1/generic_api_response"
 )
-
 
 type UserAuthHandler struct {
 	service *services.UserAuthService
 }
 
 func NewUserAuthHandler(service *services.UserAuthService) *UserAuthHandler {
-	return &UserAuthHandler{service: service} 
+	return &UserAuthHandler{service: service}
 }
 
 func (h *UserAuthHandler) Login(c *gin.Context) {
@@ -31,7 +30,7 @@ func (h *UserAuthHandler) Login(c *gin.Context) {
 
 	user, accessToken, refreshToken, err := h.service.Login(c, &req)
 	if err != nil {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	}
 
 	response := generic_api_response.APIResponse{

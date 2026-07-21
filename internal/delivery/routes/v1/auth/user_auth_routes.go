@@ -11,6 +11,6 @@ func RegisterUserAuthRoutes(rg *gin.RouterGroup, authHandler *AuthHandler.UserAu
 
 	{
 		auth.POST("/login", authHandler.Login)
-        auth.POST("/logout", middlewares.AdminJWTAuth(), authHandler.Logout)
+		auth.POST("/logout", middlewares.AdminJWTAuth(), authHandler.Logout)
 	}
 }

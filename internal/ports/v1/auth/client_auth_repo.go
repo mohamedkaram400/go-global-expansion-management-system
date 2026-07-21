@@ -1,8 +1,8 @@
 package ports
 
 import (
-	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"context"
+	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 )
 
 type ClientAuthRepository interface {
@@ -10,4 +10,3 @@ type ClientAuthRepository interface {
 	Register(ctx context.Context, client *entities.Client) (*entities.Client, error)
 	Logout(clientID string) (string, error)
 }
- 

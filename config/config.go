@@ -9,23 +9,23 @@ import (
 )
 
 type Config struct {
-	MySQLURI       string
-	MongoURI       string
-	DBName         string
-	CollectionName string
-	Port           string
-	RedisHost      string
-	RateNumber     int
-	AccessTokenTime      int
-	RefrashTokenTime     int
-	MailPort		int
-	MailHost		string
-	MailUser		string
-	MailPass		string
-	MailFrom		string
+	MySQLURI         string
+	MongoURI         string
+	DBName           string
+	CollectionName   string
+	Port             string
+	RedisHost        string
+	RateNumber       int
+	AccessTokenTime  int
+	RefrashTokenTime int
+	MailPort         int
+	MailHost         string
+	MailUser         string
+	MailPass         string
+	MailFrom         string
 }
 
-func LoadConfig() *Config { 
+func LoadConfig() *Config {
 	if os.Getenv("APP_ENV") != "production" {
 		_ = godotenv.Load()
 	}
@@ -36,7 +36,7 @@ func LoadConfig() *Config {
 	accessToken, _ := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	refrashToken, _ := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
 
-	// Check if mysql DNS found load it if not build it 
+	// Check if mysql DNS found load it if not build it
 	mysqlURI := os.Getenv("MYSQL_URI")
 
 	if mysqlURI == "" {
@@ -50,21 +50,21 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		MySQLURI:       mysqlURI,
-		MongoURI:       os.Getenv("MONGO_URI"),
-		DBName:         os.Getenv("DB_NAME"),
-		CollectionName: os.Getenv("COLLECTION_NAME"),
-		Port:           getOrDefault("PORT", ":9999"),
-		RedisHost:      os.Getenv("REDIS_HOST"),
-		AccessTokenTime:       accessToken,
-		RefrashTokenTime:      refrashToken,
-		RateNumber:     rateInt,
+		MySQLURI:         mysqlURI,
+		MongoURI:         os.Getenv("MONGO_URI"),
+		DBName:           os.Getenv("DB_NAME"),
+		CollectionName:   os.Getenv("COLLECTION_NAME"),
+		Port:             getOrDefault("PORT", ":9999"),
+		RedisHost:        os.Getenv("REDIS_HOST"),
+		AccessTokenTime:  accessToken,
+		RefrashTokenTime: refrashToken,
+		RateNumber:       rateInt,
 
-		MailPort:     mailPort,
-		MailHost:     os.Getenv("MAIL_HOST"),
-		MailUser:     os.Getenv("MAIL_USER"),
-		MailPass:     os.Getenv("MAIL_PASS"),
-		MailFrom:     os.Getenv("MAIL_FROM"),
+		MailPort: mailPort,
+		MailHost: os.Getenv("MAIL_HOST"),
+		MailUser: os.Getenv("MAIL_USER"),
+		MailPass: os.Getenv("MAIL_PASS"),
+		MailFrom: os.Getenv("MAIL_FROM"),
 	}
 }
 

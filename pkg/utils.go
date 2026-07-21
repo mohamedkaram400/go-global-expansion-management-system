@@ -5,17 +5,16 @@ import (
 )
 
 type ClientDTO struct {
-	ID           int       `json:"id"`
-	CompanyName  string    `json:"company_name"`
-	ContactEmail string    `jso:"contect_email"`
+	ID           int    `json:"id"`
+	CompanyName  string `json:"company_name"`
+	ContactEmail string `jso:"contect_email"`
 }
-
 
 func ConvertToClientDTO(client *entities.Client) *ClientDTO {
 	return &ClientDTO{
-		ID:        		 client.ID,
-		CompanyName:     client.CompanyName,
-		ContactEmail: 	 client.ContactEmail,
+		ID:           client.ID,
+		CompanyName:  client.CompanyName,
+		ContactEmail: client.ContactEmail,
 	}
 }
 

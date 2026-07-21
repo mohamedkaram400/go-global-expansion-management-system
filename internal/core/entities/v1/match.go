@@ -3,13 +3,13 @@ package entities
 import "time"
 
 type Match struct {
-	ID        int    `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID int `json:"id" gorm:"primaryKey;autoIncrement"`
 
-	ProjectID int    `json:"project_id" gorm:"not null;uniqueIndex:idx_project_vendor"`
+	ProjectID int     `json:"project_id" gorm:"not null;uniqueIndex:idx_project_vendor"`
 	Project   Project `gorm:"foreignKey:ProjectID"`
 
-	VendorID  int    `json:"vendor_id" gorm:"not null;uniqueIndex:idx_project_vendor"`
-	Vendor    Vendor  `gorm:"foreignKey:VendorID"`
+	VendorID int    `json:"vendor_id" gorm:"not null;uniqueIndex:idx_project_vendor"`
+	Vendor   Vendor `gorm:"foreignKey:VendorID"`
 
 	Score     float64   `json:"score" gorm:"column:score;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
@@ -17,9 +17,7 @@ type Match struct {
 }
 
 type VendorAnalytics struct {
-    ID            int    `json:"id"`
-    Name          string  `json:"name"`
-    AvgMatchScore float64 `json:"avg_match_score"`
+	ID            int     `json:"id"`
+	Name          string  `json:"name"`
+	AvgMatchScore float64 `json:"avg_match_score"`
 }
- 
-

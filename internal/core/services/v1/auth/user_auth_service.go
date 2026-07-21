@@ -12,7 +12,7 @@ import (
 )
 
 type UserAuthService struct {
-	repo ports.UserAuthRepository 
+	repo ports.UserAuthRepository
 }
 
 func NewUserAuthService(repo ports.UserAuthRepository) *UserAuthService {

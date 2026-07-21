@@ -12,8 +12,8 @@ func RegisterClientRoutes(rg *gin.RouterGroup, clientHandler *http.ClientHandler
 	{
 		client.POST("/create-client", clientHandler.Create)
 		client.GET("/all-clients", clientHandler.Index)
-        client.GET("/show-client/:id", clientHandler.Show)
-        client.PUT("/update-client/:id", clientHandler.Update)
-        client.DELETE("/delete-client/:id", clientHandler.Destroy)
+		client.GET("/show-client/:id", clientHandler.Show)
+		client.PUT("/update-client/:id", clientHandler.Update)
+		client.DELETE("/delete-client/:id", clientHandler.Destroy)
 	}
 }

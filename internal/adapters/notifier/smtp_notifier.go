@@ -11,31 +11,31 @@ import (
 )
 
 type SMTPNotifier struct {
-    Host     string
-    Port     int
-    Username string
-    Password string
-    From     string
+	Host     string
+	Port     int
+	Username string
+	Password string
+	From     string
 }
 
 func NewSMTPNotifier(host string, port int, user, pass, from string) *SMTPNotifier {
-    return &SMTPNotifier{
-        Host:     host,
-        Port:     port,
-        Username: user,
-        Password: pass,
-        From:     from,
-    }
+	return &SMTPNotifier{
+		Host:     host,
+		Port:     port,
+		Username: user,
+		Password: pass,
+		From:     from,
+	}
 }
 
 func (s *SMTPNotifier) SendMatchNotification(ctx context.Context, payload ports.MatchNotification) error {
-    addr := fmt.Sprintf("%s:%d", s.Host, s.Port)
-    auth := smtp.PlainAuth("", s.Username, s.Password, s.Host)
+	addr := fmt.Sprintf("%s:%d", s.Host, s.Port)
+	auth := smtp.PlainAuth("", s.Username, s.Password, s.Host)
 
-    msg := []byte("From: " + s.From + "\r\n" +
-        "To: " + strings.Join(payload.To, ",") + "\r\n" +
-        "Subject: " + payload.Subject + "\r\n\r\n" +
-        payload.Body + "\r\n")
+	msg := []byte("From: " + s.From + "\r\n" +
+		"To: " + strings.Join(payload.To, ",") + "\r\n" +
+		"Subject: " + payload.Subject + "\r\n\r\n" +
+		payload.Body + "\r\n")
 
 	// fmt.Println("msg: ", msg, "addr: ", addr, "auth: ", auth)
 

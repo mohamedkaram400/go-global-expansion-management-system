@@ -13,7 +13,7 @@ import (
 // NewTestDB creates and returns a SQLite in-memory DB for testing
 func ConnectSQLite() (*gorm.DB, error) {
 	wd, _ := os.Getwd()
-    dbPath := filepath.Join(wd, "tmp", "my_test_database.db")
+	dbPath := filepath.Join(wd, "tmp", "my_test_database.db")
 
 	log.Printf("Using SQLite file at: %s", dbPath)
 

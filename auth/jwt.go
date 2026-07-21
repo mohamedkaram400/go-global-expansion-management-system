@@ -20,21 +20,21 @@ const (
 func GenerateToken(subjectKey string, subjectID int, duration time.Duration, tokenType TokenType) (string, error) {
 
 	claims := jwt.MapClaims{
-		subjectKey		: subjectID,
-		"exp"			: time.Now().Add(duration).Unix(),
-		"type"			: tokenType,
+		subjectKey: subjectID,
+		"exp":      time.Now().Add(duration).Unix(),
+		"type":     tokenType,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
-} 
+}
 
 func GenerateAccessToken(subjectKey string, subjectID int, hours int) (string, error) {
-	return GenerateToken(subjectKey, subjectID,  time.Duration(hours)*time.Hour, AccessToken)
+	return GenerateToken(subjectKey, subjectID, time.Duration(hours)*time.Hour, AccessToken)
 }
 
 func GenerateRefreshToken(subjectKey string, subjectID int, days int) (string, error) {
-	return GenerateToken(subjectKey, subjectID,  time.Duration(days)*24*time.Hour, RefreshToken)
+	return GenerateToken(subjectKey, subjectID, time.Duration(days)*24*time.Hour, RefreshToken)
 }
 
 func ValidateJWT(tokenString string, key string) (int, error) {
@@ -53,12 +53,11 @@ func ValidateJWT(tokenString string, key string) (int, error) {
 	if !ok {
 		return 0, errors.New("invalid claims")
 	}
-	
+
 	idFloat, ok := claims[key].(float64)
 	if !ok {
 		return 0, errors.New("id not found in token")
 	}
-	
+
 	return int(idFloat), nil
 }
-

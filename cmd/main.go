@@ -62,7 +62,6 @@ func main() {
 	defer redisClient.Close()
 	defer sqlDB.Close()
 
-
 	models := []interface{}{
 		&entities.User{},
 		&entities.Client{},
@@ -84,11 +83,9 @@ func main() {
 	// 	log.Fatalf("❌ Failed to migrate SQLite: %v", err)
 	// }
 
-
 	log.Println("✅ Database migrated successfully")
 
-	seeders.SeedAdminUser(mysql)  // Run only once
-
+	seeders.SeedAdminUser(mysql) // Run only once
 
 	// 5. Service, Repo and Handlers
 	// User Auth Module
@@ -138,19 +135,17 @@ func main() {
 	analyticsService := services.NewAnalyticsService(matchRepo, researchDocumentRepo, projectRepo)
 	AnalyticsHandler := http.NewAnalyticsHandler(analyticsService)
 
-
 	// 6. Init router
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.Use(gin.Logger(), gin.Recovery())
 
-
 	// 7. Versioned API group
 	v1 := router.Group("/api/v1")
 
 	// 8. Register routes by module
-	authRoute.RegisterUserAuthRoutes(v1,   authUserHandler)
-	authRoute.RegisterClientAuthRoutes(v1,   authClientHandler)
+	authRoute.RegisterUserAuthRoutes(v1, authUserHandler)
+	authRoute.RegisterClientAuthRoutes(v1, authClientHandler)
 	routes.RegisterClientRoutes(v1, clientHandler)
 	routes.RegisterVendorRoutes(v1, vendorHandler)
 	routes.RegisterUserRoutes(v1, userHandler)
@@ -158,7 +153,6 @@ func main() {
 	routes.RegisterMatchRoutes(v1, matchHandler)
 	routes.RegisterResearchDocumentRoutes(v1, researchDocumentHandler)
 	routes.RegisterAnalyticsRoutes(v1, AnalyticsHandler)
-
 
 	// 9. Add cron job for re-matching
 	ctx := context.Background()
@@ -188,4 +182,3 @@ func startServer(router *gin.Engine, config *config.Config) {
 	}
 	log.Println("🚀 App started on port", config.Port)
 }
-

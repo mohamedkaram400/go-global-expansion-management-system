@@ -29,7 +29,7 @@ func StoreRefreshToken(ctx context.Context, id int, token string, days int) erro
 }
 
 func DeleteRefreshToken(id string) error {
-	return conn.RedisClient.Del(context.Background(),id).Err()
+	return conn.RedisClient.Del(context.Background(), id).Err()
 }
 
 func IssueTokens(subjectKey string, subjectID int, accessHours, refreshDays int) (string, string, error) {

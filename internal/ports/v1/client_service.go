@@ -8,7 +8,7 @@ import (
 )
 
 type ClientService interface {
-    GetAllClients(ctx context.Context, skip int, limit int) ([]*entities.Client, error)
+	GetAllClients(ctx context.Context, skip int, limit int) ([]*entities.Client, error)
 	FindClientByID(ctx context.Context, clientID int) (*entities.Client, error)
 	InsertClient(ctx context.Context, req *requests.ClientRequest) (*entities.Client, error)
 	UpdateClientByID(ctx context.Context, clientID int, newClient *entities.Client) (*entities.Client, error)

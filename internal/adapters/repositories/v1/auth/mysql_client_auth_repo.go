@@ -19,7 +19,7 @@ func NewClientAuthRepo(db *gorm.DB) *ClientAuthRepo {
 func (r *ClientAuthRepo) Register(ctx context.Context, client *entities.Client) (*entities.Client, error) {
 	if err := r.DB.WithContext(ctx).Create(client).Error; err != nil {
 		return nil, err
-	} 
+	}
 	return client, nil
 }
 

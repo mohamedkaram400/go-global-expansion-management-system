@@ -1,6 +1,5 @@
 package mocks
 
-
 import (
 	"context"
 
@@ -8,8 +7,8 @@ import (
 )
 
 type MockMatchRepo struct {
-	GetVendorsForProjectFunc func(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error)
-	UpsertMatchFunc  func (ctx context.Context, match *entities.Match) error 
+	GetVendorsForProjectFunc   func(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error)
+	UpsertMatchFunc            func(ctx context.Context, match *entities.Match) error
 	GetTopVendorsByCountryFunc func(ctx context.Context, days int) (map[string][]*entities.VendorAnalytics, error)
 }
 
@@ -17,11 +16,10 @@ func (m *MockMatchRepo) GetVendorsForProject(ctx context.Context, project *entit
 	return m.GetVendorsForProjectFunc(ctx, project)
 }
 
-func (m *MockMatchRepo) UpsertMatch(ctx context.Context, match *entities.Match) error { 
-	return m.UpsertMatchFunc(ctx, match)	
+func (m *MockMatchRepo) UpsertMatch(ctx context.Context, match *entities.Match) error {
+	return m.UpsertMatchFunc(ctx, match)
 }
 
 func (m *MockMatchRepo) GetTopVendorsByCountry(ctx context.Context, days int) (map[string][]*entities.VendorAnalytics, error) {
-	return m.GetTopVendorsByCountryFunc(ctx, days)	
+	return m.GetTopVendorsByCountryFunc(ctx, days)
 }
-

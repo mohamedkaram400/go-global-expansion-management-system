@@ -22,7 +22,7 @@ func setupProjectRouter() *gin.Engine {
 	db := conn.SetupTestDB()
 	projectRepo := repositories.NewProjectRepo(db)
 	projectService := services.NewProjectService(projectRepo)
-	projectHandler := handlers.NewProjectHandler(projectService) 
+	projectHandler := handlers.NewProjectHandler(projectService)
 
 	r := gin.Default()
 	r.GET("/projects", projectHandler.Index)
@@ -59,10 +59,10 @@ func TestCreateProject(t *testing.T) {
 	router := setupProjectRouter()
 
 	body := map[string]interface{}{
-		"country":          "Egypt",
-		"service_needed":  []string{"legal", "hiring"},
-		"budget":           40000,
-		"client_id":        1,
+		"country":        "Egypt",
+		"service_needed": []string{"legal", "hiring"},
+		"budget":         40000,
+		"client_id":      1,
 	}
 	jsonBody, _ := json.Marshal(body)
 
@@ -82,10 +82,10 @@ func TestUpdateProject(t *testing.T) {
 	router := setupProjectRouter()
 
 	createBody := map[string]interface{}{
-		"country":         "Egypt",
+		"country":        "Egypt",
 		"service_needed": []string{"legal", "hiring"},
-		"budget":          40000,
-		"client_id":       1,
+		"budget":         40000,
+		"client_id":      1,
 	}
 	jsonCreate, _ := json.Marshal(createBody)
 
@@ -134,20 +134,19 @@ func TestDeleteProject(t *testing.T) {
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
-	
+
 	assert.Equal(t, http.StatusNoContent, resp.Code)
 }
-
 
 func TestProjectHandler_EndToEnd(t *testing.T) {
 	router := setupProjectRouter()
 
 	// ---- 1. CREATE ----
 	createBody := map[string]interface{}{
-		"country":         "Egypt",
+		"country":        "Egypt",
 		"service_needed": []string{"legal", "hiring"},
-		"budget":          5000,
-		"client_id":       1,
+		"budget":         5000,
+		"client_id":      1,
 	}
 	jsonBody, _ := json.Marshal(createBody)
 	req, _ := http.NewRequest("POST", "/projects", bytes.NewBuffer(jsonBody))
@@ -164,7 +163,6 @@ func TestProjectHandler_EndToEnd(t *testing.T) {
 	data := createResp["data"].(map[string]interface{})
 	id := int(data["id"].(float64))
 
-
 	// ---- 2. INDEX ----
 	req, _ = http.NewRequest("GET", "/projects?skip=0&limit=10", nil)
 	resp = httptest.NewRecorder()
@@ -172,7 +170,6 @@ func TestProjectHandler_EndToEnd(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Egypt")
-
 
 	// ---- 3. SHOW ----
 	req, _ = http.NewRequest("GET", "/projects/"+strconv.Itoa(id), nil)
@@ -182,13 +179,12 @@ func TestProjectHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Egypt")
 
-
 	// ---- 4. UPDATE ----
 	updateBody := map[string]interface{}{
-		"country":         "KSA",
+		"country":        "KSA",
 		"service_needed": []string{"legal", "hiring"},
-		"budget":          55000,
-		"client_id":       1,
+		"budget":         55000,
+		"client_id":      1,
 	}
 	jsonBody, _ = json.Marshal(updateBody)
 	req, _ = http.NewRequest("PUT", "/projects/"+strconv.Itoa(id), bytes.NewBuffer(jsonBody))
@@ -200,7 +196,6 @@ func TestProjectHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "KSA")
 
-	
 	// ---- 5. DELETE ----
 	req, _ = http.NewRequest("DELETE", "/projects/"+strconv.Itoa(id), nil)
 	resp = httptest.NewRecorder()

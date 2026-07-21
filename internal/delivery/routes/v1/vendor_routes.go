@@ -13,8 +13,8 @@ func RegisterVendorRoutes(rg *gin.RouterGroup, vendorHandler *http.VendorHandler
 	{
 		vendor.POST("/create-vendor", vendorHandler.Create)
 		vendor.GET("/all-vendors", vendorHandler.Index)
-        vendor.GET("/show-vendor/:id", vendorHandler.Show)
-        vendor.PUT("/update-vendor/:id", vendorHandler.Update)
-        vendor.DELETE("/delete-vendor/:id", vendorHandler.Destroy)
+		vendor.GET("/show-vendor/:id", vendorHandler.Show)
+		vendor.PUT("/update-vendor/:id", vendorHandler.Update)
+		vendor.DELETE("/delete-vendor/:id", vendorHandler.Destroy)
 	}
 }

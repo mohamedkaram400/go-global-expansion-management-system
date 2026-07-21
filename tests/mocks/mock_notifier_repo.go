@@ -7,10 +7,9 @@ import (
 )
 
 type MockNotifier struct {
-    SendMatchNotificationFunc func (ctx context.Context, payload ports.MatchNotification) error
+	SendMatchNotificationFunc func(ctx context.Context, payload ports.MatchNotification) error
 }
 
 func (m *MockNotifier) SendMatchNotification(ctx context.Context, payload ports.MatchNotification) error {
 	return m.SendMatchNotificationFunc(ctx, payload)
 }
-

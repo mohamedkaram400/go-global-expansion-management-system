@@ -57,7 +57,7 @@ func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (
 			{Key: "count", Value: bson.D{{Key: "$sum", Value: 1}}},
 		}}},
 	}
-	
+
 	cursor, err := r.MongoCollection.Aggregate(ctx, pipeline)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (r *ResearchDocumentRepo) CountResearchDocsByProject(ctx context.Context) (
 	for cursor.Next(ctx) {
 		var doc struct {
 			ProjectID int `bson:"_id"`
-			Count     int  `bson:"count"`
+			Count     int `bson:"count"`
 		}
 		if err := cursor.Decode(&doc); err != nil {
 			return nil, err

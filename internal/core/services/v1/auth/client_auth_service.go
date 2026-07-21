@@ -12,7 +12,7 @@ import (
 )
 
 type ClientAuthService struct {
-	repo ports.ClientAuthRepository 
+	repo ports.ClientAuthRepository
 }
 
 func NewClientAuthService(repo ports.ClientAuthRepository) *ClientAuthService {
@@ -23,20 +23,20 @@ func (svc *ClientAuthService) Register(ctx context.Context, req *requests.Client
 	// Check if company name exists
 	existing, _ := svc.repo.GetClientByCompanyName(ctx, req.CompanyName)
 	if existing != nil {
-        return nil, errors.New("company name already exists")
+		return nil, errors.New("company name already exists")
 	}
 
 	// Hash password
 	hashedPwd, err := pkg.HashPassword(req.Password)
 	if err != nil {
 		return nil, err
-	} 
+	}
 
 	// Create client model
 	client := &entities.Client{
-		CompanyName:    req.CompanyName,
-		ContactEmail:   req.ContactEmail,
-		Password:   	hashedPwd,
+		CompanyName:  req.CompanyName,
+		ContactEmail: req.ContactEmail,
+		Password:     hashedPwd,
 	}
 
 	// Save to DB via repo

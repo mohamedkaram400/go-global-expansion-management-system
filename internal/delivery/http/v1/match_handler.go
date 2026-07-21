@@ -10,7 +10,7 @@ import (
 )
 
 type MatchHandler struct {
-	MatchService *services.MatchService
+	MatchService   *services.MatchService
 	ProjectService *services.ProjectService
 }
 
@@ -22,11 +22,11 @@ func (h *MatchHandler) Rebuild(c *gin.Context) {
 
 	idStr := c.Param("project_id")
 	// Parse string to int first
-    projectID64, err := strconv.Atoi(idStr)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project id"})
-        return
-    }
+	projectID64, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project id"})
+		return
+	}
 
 	projectID := int(projectID64)
 

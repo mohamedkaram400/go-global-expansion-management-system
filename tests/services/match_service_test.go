@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
-	"testing" 
+	"testing"
 
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/entities/v1"
 	"github.com/mohamedkaram400/go-global-expansion-management-system/internal/core/services/v1"
@@ -17,7 +17,7 @@ func TestRebuild_Success(t *testing.T) {
 
 	// 1. Get vendors matches this project
 	mockRepo := &mocks.MockMatchRepo{
-		GetVendorsForProjectFunc: func(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error)  {
+		GetVendorsForProjectFunc: func(ctx context.Context, project *entities.Project) ([]*entities.Vendor, error) {
 			return []*entities.Vendor{
 				{ID: 1, Name: "VendorA", ServicesOffered: []byte(`["Consulting"]`), Rating: 4.5, ResponseSlaHours: 2},
 			}, nil
@@ -25,7 +25,7 @@ func TestRebuild_Success(t *testing.T) {
 		UpsertMatchFunc: func(ctx context.Context, match *entities.Match) error {
 			return nil
 		},
-	} 
+	}
 
 	mockProjectService := &mocks.MockProjectService{
 		FindProjectByIDFunc: func(ctx context.Context, id int) (*entities.Project, error) {
@@ -50,7 +50,6 @@ func TestRebuild_Success(t *testing.T) {
 			return nil
 		},
 	}
-
 
 	svc := services.NewMatchService(mockRepo, mockProjectService, mockNotifier, mockClientService)
 	results, err := svc.Rebuild(ctx, 1)

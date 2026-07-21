@@ -25,7 +25,7 @@ func setupClientRouter() *gin.Engine {
 	db := conn.SetupTestDB()
 	clientRepo := repositories.NewClientRepo(db)
 	clientService := services.NewClientService(clientRepo)
-	clientHandler := handlers.NewClientHandler(clientService) 
+	clientHandler := handlers.NewClientHandler(clientService)
 
 	r := gin.Default()
 	r.GET("/clients", clientHandler.Index)
@@ -65,7 +65,6 @@ func TestGetClientById(t *testing.T) {
 	createResp := httptest.NewRecorder()
 	router.ServeHTTP(createResp, createReq)
 
-	
 	// Parse response to get the new client ID
 	var createRespBody map[string]interface{}
 	err := json.Unmarshal(createResp.Body.Bytes(), &createRespBody)
@@ -93,7 +92,7 @@ func TestCreateClient(t *testing.T) {
 	body := map[string]string{
 		"company_name":  "Test Company",
 		"contact_email": email,
-		"password": "qazwsx123",
+		"password":      "qazwsx123",
 	}
 	jsonBody, _ := json.Marshal(body)
 
@@ -107,7 +106,7 @@ func TestCreateClient(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Test Company")
-	
+
 }
 
 func TestUpdateClient(t *testing.T) {
@@ -120,7 +119,6 @@ func TestUpdateClient(t *testing.T) {
 		"password":      "secret",
 	}
 	jsonCreate, _ := json.Marshal(createBody)
-
 
 	req, _ := http.NewRequest("POST", "/clients", bytes.NewBuffer(jsonCreate))
 	req.Header.Set("Content-Type", "application/json")
@@ -137,7 +135,6 @@ func TestUpdateClient(t *testing.T) {
 
 	data := created["data"].(map[string]interface{})
 	id := int(data["id"].(float64))
-	
 
 	// Update request
 	updateBody := map[string]interface{}{
@@ -165,7 +162,7 @@ func TestDeleteClient(t *testing.T) {
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
-	
+
 	assert.Equal(t, http.StatusNoContent, resp.Code)
 }
 
@@ -176,8 +173,7 @@ func TestClientHandler_EndToEnd(t *testing.T) {
 	createBody := map[string]interface{}{
 		"company_name":  "Test Company",
 		"contact_email": "test_" + uuid.NewString() + "@example.com",
-		"password": "qazwsx123",
-
+		"password":      "qazwsx123",
 	}
 	jsonBody, _ := json.Marshal(createBody)
 	req, _ := http.NewRequest("POST", "/clients", bytes.NewBuffer(jsonBody))
@@ -194,7 +190,6 @@ func TestClientHandler_EndToEnd(t *testing.T) {
 	data := createResp["data"].(map[string]interface{})
 	id := int(data["id"].(float64))
 
-
 	// ---- 2. INDEX ----
 	req, _ = http.NewRequest("GET", "/clients?skip=0&limit=10", nil)
 	resp = httptest.NewRecorder()
@@ -202,7 +197,6 @@ func TestClientHandler_EndToEnd(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Test Company")
-
 
 	// ---- 3. SHOW ----
 	req, _ = http.NewRequest("GET", "/clients/"+strconv.Itoa(id), nil)
@@ -212,12 +206,11 @@ func TestClientHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Test Company")
 
-
 	// ---- 4. UPDATE ----
 	updateBody := map[string]interface{}{
 		"company_name":  "Updated Company",
 		"contact_email": "updated@example.com",
-		"password": "qazwsx123",
+		"password":      "qazwsx123",
 	}
 	jsonBody, _ = json.Marshal(updateBody)
 	req, _ = http.NewRequest("PUT", "/clients/"+strconv.Itoa(id), bytes.NewBuffer(jsonBody))
@@ -229,7 +222,6 @@ func TestClientHandler_EndToEnd(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.Code)
 	assert.Contains(t, resp.Body.String(), "Updated Company")
 
-	
 	// ---- 5. DELETE ----
 	req, _ = http.NewRequest("DELETE", "/clients/"+strconv.Itoa(id), nil)
 	resp = httptest.NewRecorder()

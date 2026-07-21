@@ -11,4 +11,3 @@ type ResearchDocumentRepository interface {
 	SearchOnDocument(ctx context.Context, searchTerm string) ([]*entities.Document, error)
 	CountResearchDocsByProject(ctx context.Context) (map[int]int, error)
 }
- 

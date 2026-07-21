@@ -10,7 +10,6 @@ import (
 
 const UserIDKey string = "userID"
 
-
 func AdminJWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Get token from header
@@ -29,7 +28,7 @@ func AdminJWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		tokenString := parts[1] 
+		tokenString := parts[1]
 
 		// Validate token and extract userID
 		userID, err := JWTAuth.ValidateJWT(tokenString, "user_id")

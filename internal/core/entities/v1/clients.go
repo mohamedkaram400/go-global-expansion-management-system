@@ -9,4 +9,4 @@ type Client struct {
 	Password     string    `json:"password" 		gorm:"column:password;not null"`
 	CreatedAt    time.Time `json:"created_at" 		gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt    time.Time `json:"updated_at" 		gorm:"column:updated_at;autoUpdateTime"`
-} 
+}

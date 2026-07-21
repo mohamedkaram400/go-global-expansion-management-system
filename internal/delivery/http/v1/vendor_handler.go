@@ -19,19 +19,19 @@ type VendorHandler struct {
 }
 
 func NewVendorHandler(service *services.VendorService) *VendorHandler {
-	return &VendorHandler{Service: service} 
+	return &VendorHandler{Service: service}
 }
 
 func (h *VendorHandler) Index(c *gin.Context) {
 
-    skip, _ := strconv.Atoi(c.DefaultQuery("skip", "0"))
-    limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	skip, _ := strconv.Atoi(c.DefaultQuery("skip", "0"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 
-    vendors, err := h.Service.GetAllVendors(c.Request.Context(), skip, limit)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
+	vendors, err := h.Service.GetAllVendors(c.Request.Context(), skip, limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Vendors returned successfully",
@@ -42,14 +42,14 @@ func (h *VendorHandler) Index(c *gin.Context) {
 }
 
 func (h *VendorHandler) Show(c *gin.Context) {
-    idStr := c.Param("id")
+	idStr := c.Param("id")
 	VendorID, _ := strconv.Atoi(idStr)
 
 	newVendor, err := h.Service.FindVendorByID(c.Request.Context(), VendorID)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Vendor Returned Successfully",
@@ -60,20 +60,20 @@ func (h *VendorHandler) Show(c *gin.Context) {
 }
 
 func (h *VendorHandler) Create(c *gin.Context) {
-    var req requests.VendorRequest
+	var req requests.VendorRequest
 
-    fmt.Printf("📥 Handler received request: %+v\n", req) // debug
+	fmt.Printf("📥 Handler received request: %+v\n", req) // debug
 
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-    newVendor, err := h.Service.InsertVendor(c, &req)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	newVendor, err := h.Service.InsertVendor(c, &req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Vendor Created Successfully",
@@ -81,55 +81,53 @@ func (h *VendorHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, response)
-} 
+}
 
 func (h *VendorHandler) Update(c *gin.Context) {
-    idStr := c.Param("id")
+	idStr := c.Param("id")
 	VendorID, _ := strconv.Atoi(idStr)
 
-    var req requests.VendorRequest
+	var req requests.VendorRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	// Marshal []string → datatypes.JSON
-    countriesJSON, _ := json.Marshal(req.CountriesSupported)
-    servicesJSON, _ := json.Marshal(req.ServicesOffered)
-
+	countriesJSON, _ := json.Marshal(req.CountriesSupported)
+	servicesJSON, _ := json.Marshal(req.ServicesOffered)
 
 	updates := &entities.Vendor{
-        Name:               req.Name,
-        CountriesSupported: countriesJSON,
-        ServicesOffered:    servicesJSON,
-        Rating:             req.Rating,
-        ResponseSlaHours:   req.ResponseSlaHours,
-    }
+		Name:               req.Name,
+		CountriesSupported: countriesJSON,
+		ServicesOffered:    servicesJSON,
+		Rating:             req.Rating,
+		ResponseSlaHours:   req.ResponseSlaHours,
+	}
 
 	vendor, err := h.Service.UpdateVendorByID(c.Request.Context(), VendorID, updates)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
-        Message: "Vendor updated successfully",
+		Message: "Vendor updated successfully",
 		Data:    responses.FormatVendor(vendor),
-    }
+	}
 
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *VendorHandler) Destroy(c *gin.Context) {
-    idStr := c.Param("id")
+	idStr := c.Param("id")
 	VendorID, _ := strconv.Atoi(idStr)
 
-    _, err := h.Service.DeleteVendorByID(c.Request.Context(), VendorID)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	_, err := h.Service.DeleteVendorByID(c.Request.Context(), VendorID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusNoContent, nil)
 }
- 

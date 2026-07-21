@@ -8,19 +8,19 @@ import (
 )
 
 type FlagExpiredSLAsJob struct {
-    VendorService *services.VendorService
+	VendorService *services.VendorService
 }
 
 func (j *FlagExpiredSLAsJob) Name() string {
-    return "FlagExpiredSLAsJob"
+	return "FlagExpiredSLAsJob"
 }
 
 func (j *FlagExpiredSLAsJob) Schedule() string {
-    // run every day at 1 AM
-    return "0 1 * * *"
+	// run every day at 1 AM
+	return "0 1 * * *"
 }
 
 func (j *FlagExpiredSLAsJob) Execute(ctx context.Context) error {
-    log.Println("Running FlagExpiredSLAsJob...")
-    return j.VendorService.FlagExpiredSLAs(ctx)
+	log.Println("Running FlagExpiredSLAsJob...")
+	return j.VendorService.FlagExpiredSLAs(ctx)
 }

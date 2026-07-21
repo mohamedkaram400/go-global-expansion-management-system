@@ -8,8 +8,8 @@ import (
 )
 
 type AnalyticsService struct {
-	MatchRepo ports.MatchRepository
-	ProjectRepo ports.ProjectRepository
+	MatchRepo            ports.MatchRepository
+	ProjectRepo          ports.ProjectRepository
 	ResearchDocumentRepo ports.ResearchDocumentRepository
 }
 

@@ -27,7 +27,7 @@ func SetupTestDB() *gorm.DB {
 			log.Fatalf("❌ failed to create tmp directory: %v", err)
 		}
 	}
-	
+
 	// ✅ Always delete the old DB before each run
 	if _, err := os.Stat(dbPath); err == nil {
 		os.Remove(dbPath)

@@ -17,32 +17,32 @@ type ClientHandler struct {
 }
 
 func NewClientHandler(service *services.ClientService) *ClientHandler {
-	return &ClientHandler{Service: service} 
+	return &ClientHandler{Service: service}
 }
 
 func (h *ClientHandler) Index(c *gin.Context) {
 
-    skip, _ := strconv.Atoi(c.DefaultQuery("skip", "0"))
-    limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	skip, _ := strconv.Atoi(c.DefaultQuery("skip", "0"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 
-    clients, err := h.Service.GetAllClients(c.Request.Context(), skip, limit)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
+	clients, err := h.Service.GetAllClients(c.Request.Context(), skip, limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	var clientResponses []responses.ClientResponse
-    for _, client := range clients {
-        clientResponses = append(clientResponses, responses.ClientResponse{
-            ID:           client.ID,
-            CompanyName:  client.CompanyName,
-            ContactEmail: client.ContactEmail,
-        })
-    }
+	for _, client := range clients {
+		clientResponses = append(clientResponses, responses.ClientResponse{
+			ID:           client.ID,
+			CompanyName:  client.CompanyName,
+			ContactEmail: client.ContactEmail,
+		})
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Clients Returned Successfully",
-		Data: clientResponses,
+		Data:    clientResponses,
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -53,10 +53,10 @@ func (h *ClientHandler) Show(c *gin.Context) {
 	clientID, _ := strconv.Atoi(idStr)
 
 	newClient, err := h.Service.FindClientByID(c.Request.Context(), clientID)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Client Returned Successfully",
@@ -71,18 +71,18 @@ func (h *ClientHandler) Show(c *gin.Context) {
 }
 
 func (h *ClientHandler) Create(c *gin.Context) {
-    var req requests.ClientRequest
+	var req requests.ClientRequest
 
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-    newClient, err := h.Service.InsertClient(c, &req)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	newClient, err := h.Service.InsertClient(c, &req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Client Created Successfully",
@@ -94,28 +94,28 @@ func (h *ClientHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, response)
-} 
+}
 
 func (h *ClientHandler) Update(c *gin.Context) {
-    idStr := c.Param("id")
+	idStr := c.Param("id")
 	clientID, _ := strconv.Atoi(idStr)
-	
-    var req requests.ClientRequest
+
+	var req requests.ClientRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	updates := &entities.Client{
-        CompanyName:  req.CompanyName,
-        ContactEmail: req.ContactEmail,
-    }
+		CompanyName:  req.CompanyName,
+		ContactEmail: req.ContactEmail,
+	}
 
 	client, err := h.Service.UpdateClientByID(c.Request.Context(), clientID, updates)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	response := generic_api_response.APIResponse{
 		Message: "Client Update Successfully",
@@ -130,14 +130,14 @@ func (h *ClientHandler) Update(c *gin.Context) {
 }
 
 func (h *ClientHandler) Destroy(c *gin.Context) {
-    idStr := c.Param("id")
+	idStr := c.Param("id")
 	clientID, _ := strconv.Atoi(idStr)
 
-    _, err := h.Service.DeleteClientByID(c.Request.Context(), clientID)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	_, err := h.Service.DeleteClientByID(c.Request.Context(), clientID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.Status(http.StatusNoContent)
 }
